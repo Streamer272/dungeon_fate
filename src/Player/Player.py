@@ -67,14 +67,6 @@ class Player:
         self.direction = direction
         self.canvas.move(self.sprite, x, y)
 
-        dead_enemies = 0
-        for enemy in self.enemies:
-            if enemy.health == 0:
-                dead_enemies += 1
-
-        if dead_enemies == 10:
-            say(self.canvas, text="Congratulations, you survived first wave!", timeout=3)
-
     def attack_with_knife(self) -> None:
         if self.knife_attack_running:
             return None

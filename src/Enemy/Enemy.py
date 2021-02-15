@@ -4,9 +4,9 @@ from src.Player.Player import *
 
 
 class Enemy:
-    def __init__(self, canvas: Canvas, player: Player, start_health: int = 50, damage: int = 10, attack_speed: float = 0.5) -> None:
+    def __init__(self, canvas: Canvas, player: Player, health: int = 50, damage: int = 10, attack_speed: float = 0.5) -> None:
         self.player = player
-        self.health = start_health
+        self.health = health
         self.game_running = True
 
         self.damage = damage

@@ -2,6 +2,11 @@
   {
     "name": "First wave",
     "enemy-count": 10,
-    "spawn-timeout": 3
+    "spawn-timeout": 3,
+    "enemy": {
+      "health": 50,
+      "damage": 10,
+      "attack-speed": 0.5
+    }
   }
 ]
