@@ -1,4 +1,4 @@
-from Enemy import *
+from src.Enemy.Enemy import *
 
 
 class Gui:
@@ -20,8 +20,9 @@ class Gui:
         self.win.mainloop()
 
     def add_enemies(self, count: int = 10, timeout: int = 3):
-        say(self.canvas, text="First wave is coming in 3 seconds...", timeout=3)
-        sleep(3)
+        for i in range(3):
+            say(self.canvas, text="First wave is coming in " + str(3 - i) + "...", timeout=1)
+            sleep(1)
         for i in range(count):
             if self.player.health != 0:
                 enemy = Enemy(self.canvas, self.player, 50, 10, 2)

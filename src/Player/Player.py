@@ -1,4 +1,4 @@
-from Global_Functions import *
+from src.Global_Functions import *
 
 
 class Player:
@@ -16,7 +16,7 @@ class Player:
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
 
-        self.knifing = False
+        self.knife_attack_running = False
         self.knife_damage = 25
         self.knife_attack_speed = 2
 
@@ -25,6 +25,7 @@ class Player:
         self.flick_distance = 150
 
         self.enemies = []
+        self.game_paused = False
 
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                text="Health: " + str(self.health))
@@ -74,11 +75,11 @@ class Player:
         if dead_enemies == 10:
             say(self.canvas, text="Congratulations, you survived first wave!", timeout=3)
 
-    def knife(self) -> None:
-        if self.knifing:
+    def attack_with_knife(self) -> None:
+        if self.knife_attack_running:
             return None
 
-        self.knifing = True
+        self.knife_attack_running = True
         x = self.x
         y = self.y
         rotation = 0
@@ -106,10 +107,13 @@ class Player:
                 enemy.take_damage(self.knife_damage)
 
     def delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
+        while self.game_paused:
+            sleep(1)
+
         sleep(timeout)
         self.canvas.delete(knife_number)
         sleep((1 / self.knife_attack_speed) - timeout)
-        self.knifing = False
+        self.knife_attack_running = False
 
     def flick(self) -> None:
         if self.flick_recharging:
@@ -137,8 +141,13 @@ class Player:
         Thread(target=self.recharge_flick).start()
 
     def recharge_flick(self):
+        while self.game_paused:
+            sleep(1)
+
         slept = 0
         while slept <= self.flick_recharge_time:
+            while self.game_paused:
+                sleep(1)
             sleep(1)
             self.canvas.itemconfig(self.flick_recharge_label,
                                    text="Flick: Ready in " + str(self.flick_recharge_time - slept) + " seconds...")
@@ -147,7 +156,10 @@ class Player:
         self.canvas.itemconfig(self.flick_recharge_label,
                                text="Flick: READY")
 
-    def die(self) -> None:
+    def start_die_animation(self) -> None:
+        while self.game_paused:
+            sleep(1)
+
         for enemy in self.enemies:
             enemy.game_running = False
 
@@ -156,22 +168,28 @@ class Player:
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
+        while self.game_paused:
+            sleep(1)
+
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
         if self.health == 0:
-            self.die()
+            self.start_die_animation()
             return None
 
         self.sprite_file = PhotoImage(file="img/entities/entity-damaged.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
-        Thread(target=self.change_image_back).start()
+        Thread(target=self.set_image_to_default).start()
 
-    def change_image_back(self) -> None:
+    def set_image_to_default(self) -> None:
+        while self.game_paused:
+            sleep(1)
+
         sleep(0.2)
         self.sprite_file = PhotoImage(file="img/entities/player.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         if self.health == 0:
-            self.die()
+            self.start_die_animation()
 
 
 class PlayerListener:
@@ -180,6 +198,9 @@ class PlayerListener:
         self.canvas = canvas
 
     def on_press(self, event: any) -> None:
+        if self.player.game_paused:
+            return None
+
         key = str(event.char).lower()
 
         if key == "w":
@@ -191,7 +212,7 @@ class PlayerListener:
         elif key == "a":
             self.player.move(LEFT, self.player.movement)
         elif key == "e":
-            self.player.knife()
+            self.player.attack_with_knife()
         elif key == "f":
             self.player.flick()
 

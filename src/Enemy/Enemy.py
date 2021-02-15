@@ -1,6 +1,6 @@
 from random import randint, choice
 
-from Player import *
+from src.Player.Player import *
 
 
 class Enemy:
@@ -52,9 +52,9 @@ class Enemy:
         if self.health <= 0:
             self.die()
             return None
-        Thread(target=self.change_image_back).start()
+        Thread(target=self.set_image_to_default).start()
 
-    def change_image_back(self) -> None:
+    def set_image_to_default(self) -> None:
         sleep(0.2)
         self.enemy_file = PhotoImage(file="img/entities/enemy.png")
         self.canvas.itemconfig(self.enemy, image=self.enemy_file)

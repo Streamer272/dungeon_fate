@@ -1,0 +1,7 @@
+[
+  {
+    "name": "First wave",
+    "enemy-count": 10,
+    "spawn-timeout": 3
+  }
+]
