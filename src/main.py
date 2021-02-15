@@ -1,5 +1,3 @@
-import time
-
 from Player import *
 from Directions import *
 
@@ -28,4 +26,3 @@ class Gui:
 if __name__ == "__main__":
     gui = Gui()
     Thread(target=gui.create).start()
-    time.sleep(0.5)
