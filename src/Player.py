@@ -33,25 +33,24 @@ class Player:
                 return None
 
             y -= steps
-            self.y -= steps
         elif direction == RIGHT:
             if self.x + steps >= 1900:
                 return None
 
             x += steps
-            self.x += steps
         elif direction == DOWN:
             if self.y + steps >= 1030:
                 return None
 
             y += steps
-            self.y += steps
         elif direction == LEFT:
             if self.x - steps <= 20:
                 return None
 
             x -= steps
-            self.x -= steps
+
+        self.x += x
+        self.y += y
 
         self.direction = direction
         self.canvas.move(self.sprite, x, y)

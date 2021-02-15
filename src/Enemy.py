@@ -27,6 +27,18 @@ class Enemy:
             if self.player.x < self.x:
                 x -= 50
 
+            if self.player.y < self.y:
+                y -= 50
+
+            if self.player.y > self.y:
+                y += 50
+
+            if self.player.x > self.x:
+                x += 50
+
+            self.x += x
+            self.y += y
+
             self.canvas.move(self.enemy, x, y)
 
 
