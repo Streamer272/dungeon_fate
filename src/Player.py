@@ -22,6 +22,7 @@ class Player:
 
         self.knifing = False
         self.knife_damage = 25
+        self.knife_attack_speed = 2
         self.enemies = []
 
     def move(self, direction: int, steps: int) -> None:
@@ -89,6 +90,7 @@ class Player:
     def delete_knife(self, knife_number, timeout):
         sleep(timeout)
         self.canvas.delete(knife_number)
+        sleep((1 / self.knife_attack_speed) - timeout)
         self.knifing = False
 
     def die(self):

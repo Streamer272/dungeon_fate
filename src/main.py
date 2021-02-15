@@ -30,4 +30,4 @@ class Gui:
 
 if __name__ == "__main__":
     gui = Gui()
-    Thread(target=gui.create).start()
+    gui.create()
