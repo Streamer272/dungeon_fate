@@ -21,23 +21,25 @@ class Enemy:
         while self.health != 0:
             sleep(0.5)
 
-            x = 0
-            y = 0
+            x = self.x
+            y = self.y
 
-            if self.player.x < self.x:
+            
+            if x > self.player.x:
                 x -= 50
-
-            if self.player.y < self.y:
-                y -= 50
-
-            if self.player.y > self.y:
-                y += 50
-
-            if self.player.x > self.x:
+            elif x == self.player.x:
+                pass
+            elif x < self.player.x:
                 x += 50
 
-            self.x += x
-            self.y += y
+            if y > self.player.y:
+                y -= 50
+            elif y == self.player.y:
+                pass
+            elif y < self.player.y:
+                y += 50
+
+
 
             self.canvas.move(self.enemy, x, y)
 
