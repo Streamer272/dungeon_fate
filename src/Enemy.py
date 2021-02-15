@@ -62,18 +62,18 @@ class Enemy:
     def auto_move(self) -> None:
         while self.health != 0 and self.game_running:
             self.attack_enemy()
-            sleep(0.1)
+            sleep(0.01)
 
             x = 0
             y = 0
             if self.x > self.player.x:
-                x -= 5
+                x -= 1
             elif self.x < self.player.x:
-                x += 5
+                x += 1
             if self.y > self.player.y:
-                y -= 5
+                y -= 1
             elif self.y < self.player.y:
-                y += 5
+                y += 1
             self.y += y
             self.x += x
 

@@ -2,11 +2,12 @@ from Global_Functions import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, start_health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2) -> None:
+    def __init__(self, canvas: Canvas, start_health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+        self.direction = UP
         self.health = start_health
+        self.movement = movement
         self.x = x
         self.y = y
-        self.direction = UP
 
         self.canvas = canvas
         self.sprite_file = PhotoImage(file="img/entities/player.png")
@@ -130,19 +131,18 @@ class Player:
         self.y += y
 
         self.canvas.move(self.sprite, x, y)
-        print("Got here")
 
         self.flick_recharging = True
         self.canvas.itemconfig(self.flick_recharge_label, text="Flick: Not Ready")
         Thread(target=self.recharge_flick).start()
 
     def recharge_flick(self):
-        print("aaaaaaaaaaa")
         slept = 0
-        while slept >= self.flick_recharge_time:
+        while slept <= self.flick_recharge_time:
             sleep(1)
             self.canvas.itemconfig(self.flick_recharge_label,
-                                   text="Flick: Ready in " + str(self.flick_recharge_time) + " seconds...")
+                                   text="Flick: Ready in " + str(self.flick_recharge_time - slept) + " seconds...")
+            slept += 1
         self.flick_recharging = False
         self.canvas.itemconfig(self.flick_recharge_label,
                                text="Flick: READY")
@@ -175,22 +175,21 @@ class Player:
 
 
 class PlayerListener:
-    def __init__(self, player: Player, canvas: Canvas, movement: int = 10) -> None:
+    def __init__(self, player: Player, canvas: Canvas) -> None:
         self.player = player
         self.canvas = canvas
-        self.movement = movement
 
     def on_press(self, event: any) -> None:
         key = str(event.char).lower()
 
         if key == "w":
-            self.player.move(UP, self.movement)
+            self.player.move(UP, self.player.movement)
         elif key == "d":
-            self.player.move(RIGHT, self.movement)
+            self.player.move(RIGHT, self.player.movement)
         elif key == "s":
-            self.player.move(DOWN, self.movement)
+            self.player.move(DOWN, self.player.movement)
         elif key == "a":
-            self.player.move(LEFT, self.movement)
+            self.player.move(LEFT, self.player.movement)
         elif key == "e":
             self.player.knife()
         elif key == "f":
