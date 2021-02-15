@@ -40,6 +40,8 @@ class Enemy:
                 y += 50
 
 
+            self.y = y
+            self.x = x
 
             self.canvas.move(self.enemy, x, y)
 
