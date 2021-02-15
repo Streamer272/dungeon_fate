@@ -22,21 +22,34 @@ class Player:
 
         self.knifing = False
         self.knife_damage = 25
+        self.enemies = []
 
     def move(self, direction: int, steps: int) -> None:
         x = 0
         y = 0
 
         if direction == UP:
+            if self.y - steps <= 0:
+                return None
+
             y -= steps
             self.y -= steps
         elif direction == RIGHT:
+            if self.x + steps >= 1900:
+                return None
+
             x += steps
             self.x += steps
         elif direction == DOWN:
+            if self.y + steps >= 1030:
+                return None
+
             y += steps
             self.y += steps
         elif direction == LEFT:
+            if self.x - steps <= 20:
+                return None
+
             x -= steps
             self.x -= steps
 
