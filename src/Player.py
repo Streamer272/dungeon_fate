@@ -1,4 +1,6 @@
+from threading import Thread
 from tkinter import *
+
 from Directions import *
 
 
@@ -8,10 +10,14 @@ class Player:
         self.x = x
         self.y = y
 
-        self.sprite_file = PhotoImage(file="src/img/player.png")
-        self.sprite = canvas.create_image(self.x, self.y, anchor=NW, image=self.sprite_file)
+        self.canvas = canvas
+        self.sprite_file = PhotoImage(file="img/player.png")
+        self.sprite = self.canvas.create_image(self.x, self.y, anchor=NW, image=self.sprite_file)
 
-    def move(self, canvas: Canvas, direction: int, steps: int) -> None:
+        listener = PlayerListener(self, self.canvas)
+        Thread(target=listener.join).start()
+
+    def move(self, direction: int, steps: int) -> None:
         x = 0
         y = 0
 
@@ -28,7 +34,33 @@ class Player:
             x -= steps
             self.x -= steps
 
-        canvas.move(self.sprite, x, y)
+        self.canvas.move(self.sprite, x, y)
+
+
+class PlayerListener:
+    def __init__(self, player: Player, canvas: Canvas, movement: int = 10):
+        self.player = player
+        self.canvas = canvas
+        self.movement = movement
+
+    def on_press(self, event: any) -> None:
+        key = event.char
+
+        if key == "w":
+            print("Moving UP")
+            self.player.move(UP, self.movement)
+        elif key == "d":
+            print("Moving RIGHT")
+            self.player.move(RIGHT, self.movement)
+        elif key == "s":
+            print("Moving DOWN")
+            self.player.move(DOWN, self.movement)
+        elif key == "a":
+            print("Moving LEFT")
+            self.player.move(LEFT, self.movement)
+
+    def join(self):
+        self.canvas.bind_all("<Key>", self.on_press)
 
 
 if __name__ == '__main__':

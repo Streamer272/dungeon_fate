@@ -1,8 +1,4 @@
-from tkinter import *
-from threading import Thread
-from pynput.keyboard import Key, Listener
 import time
-import random
 
 from Player import *
 from Directions import *
@@ -32,5 +28,4 @@ class Gui:
 if __name__ == "__main__":
     gui = Gui()
     Thread(target=gui.create).start()
-    time.sleep(2)
-    gui.do()
+    time.sleep(0.5)
