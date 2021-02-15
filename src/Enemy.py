@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 from Player import *
 
@@ -13,12 +13,27 @@ class Enemy:
         self.charging_attack = False
         self.attack_speed = attack_speed
 
-        self.x = randint(100, 1820)
-        self.y = randint(100, 980)
+        self.x, self.y = self.generate_spawn_position()
 
         self.canvas = canvas
         self.enemy_file = PhotoImage(file="img/entities/enemy.png")
         self.enemy = self.canvas.create_image(self.x, self.y, anchor=N, image=self.enemy_file)
+
+    def generate_spawn_position(self):
+        x_possible = [[self.player.x - 500, self.player.x - 250], [self.player.x + 250, self.player.x + 500]]
+        y_possible = [[self.player.y - 500, self.player.y - 250], [self.player.y + 250, self.player.y + 500]]
+        x_choice = choice(x_possible)
+        y_choice = choice(y_possible)
+        x = randint(x_choice[0], x_choice[1])
+        y = randint(y_choice[0], y_choice[1])
+
+        if x < 0 or y < 0 or x > 1920 or y > 1080:
+            x, y = self.generate_spawn_position()
+
+        if x % 5 != 0 or y % 5 != 0:
+            x, y = self.generate_spawn_position()
+
+        return x, y
 
     def attack_enemy(self) -> None:
         if self.player.x - 50 < self.x < self.player.x + 50 and self.player.y - 50 < self.y < self.player.y + 50 and not self.charging_attack:
