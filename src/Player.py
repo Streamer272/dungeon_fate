@@ -13,7 +13,7 @@ class Player:
         self.direction = UP
 
         self.canvas = canvas
-        self.sprite_file = PhotoImage(file="img/player.png")
+        self.sprite_file = PhotoImage(file="img/entities/player.png")
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal", text="Health: " + str(self.health))
 
@@ -87,16 +87,22 @@ class Player:
         self.canvas.delete(knife_number)
         self.knifing = False
 
+    def die(self):
+        self.sprite_file = PhotoImage(file="img/entities/player-dead.png")
+        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        for enemy in self.enemies:
+            enemy.health = 0
+
     def take_damage(self, damage):
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
-        self.sprite_file = PhotoImage(file="img/player-damaged.png")
+        self.sprite_file = PhotoImage(file="img/entities/entity-damaged.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.change_image_back).start()
 
     def change_image_back(self):
         sleep(0.2)
-        self.sprite_file = PhotoImage(file="img/player.png")
+        self.sprite_file = PhotoImage(file="img/entities/player.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
 
