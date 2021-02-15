@@ -90,6 +90,14 @@ class Player:
     def take_damage(self, damage):
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
+        self.sprite_file = PhotoImage(file="img/player-damaged.png")
+        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        Thread(target=self.change_image_back).start()
+
+    def change_image_back(self):
+        sleep(0.2)
+        self.sprite_file = PhotoImage(file="img/player.png")
+        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
 
 class PlayerListener:
