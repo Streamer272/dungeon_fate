@@ -1,6 +1,4 @@
-from Player import *
 from Enemy import *
-from Directions import *
 
 
 class Gui:
@@ -17,14 +15,17 @@ class Gui:
         self.canvas.pack()
 
         self.player = Player(self.canvas, 100)
-        self.enemy = Enemy(self.canvas, self.player, 50, 10, 0.1)
-        self.player.enemies.append(self.enemy)
-        Thread(target=self.enemy.auto_move).start()
+        Thread(target=self.add_enemies).start()
 
         self.win.mainloop()
 
-    def do(self) -> None:
-        self.player.move(self.canvas, DOWN, 100)
+    def add_enemies(self, count: int = 10, timeout: int = 3):
+        sleep(3)
+        for i in range(count):
+            enemy = Enemy(self.canvas, self.player, 50, 10, 2)
+            self.player.enemies.append(enemy)
+            Thread(target=enemy.auto_move).start()
+            sleep(timeout)
 
 
 if __name__ == "__main__":

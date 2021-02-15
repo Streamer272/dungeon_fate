@@ -82,6 +82,10 @@ class Player:
         knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
         Thread(target=self.delete_knife, args=(knife, 0.25)).start()
 
+        for enemy in self.enemies:
+            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
+                enemy.take_damage(self.knife_damage)
+
     def delete_knife(self, knife_number, timeout):
         sleep(timeout)
         self.canvas.delete(knife_number)
@@ -102,7 +106,6 @@ class Player:
             self.die()
             return None
 
-        print("Token damage")
         self.sprite_file = PhotoImage(file="img/entities/entity-damaged.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.change_image_back).start()
@@ -111,6 +114,8 @@ class Player:
         sleep(0.2)
         self.sprite_file = PhotoImage(file="img/entities/player.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        if self.health == 0:
+            self.die()
 
 
 class PlayerListener:
