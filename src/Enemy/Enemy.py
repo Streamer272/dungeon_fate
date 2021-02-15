@@ -8,6 +8,7 @@ class Enemy:
         self.player = player
         self.health = health
         self.game_running = True
+        self.despawn_timer = 10
 
         self.damage = damage
         self.charging_attack = False
@@ -60,7 +61,7 @@ class Enemy:
         self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def auto_move(self) -> None:
-        while self.health != 0 and self.game_running:
+        while self.health > 0 and self.game_running:
             self.attack_enemy()
             sleep(0.01)
 
@@ -81,7 +82,7 @@ class Enemy:
 
         if self.health <= 0:
             self.die()
-            sleep(2)
+            sleep(self.despawn_timer)
         self.destroy()
 
     def die(self) -> None:
