@@ -15,11 +15,13 @@ class Player:
         self.canvas = canvas
         self.sprite_file = PhotoImage(file="img/player.png")
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
+        self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal", text="Health: " + str(self.health))
 
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
 
         self.knifing = False
+        self.knife_damage = 25
 
     def move(self, direction: int, steps: int) -> None:
         x = 0
@@ -73,6 +75,10 @@ class Player:
         self.canvas.delete(knife_number)
         self.knifing = False
 
+    def take_damage(self, damage):
+        self.health -= damage
+        self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
+
 
 class PlayerListener:
     def __init__(self, player: Player, canvas: Canvas, movement: int = 10):
@@ -95,7 +101,11 @@ class PlayerListener:
             self.player.knife()
 
     def join(self):
-        self.canvas.bind_all("<Key>", self.on_press)
+        self.canvas.bind_all("w", self.on_press)
+        self.canvas.bind_all("d", self.on_press)
+        self.canvas.bind_all("s", self.on_press)
+        self.canvas.bind_all("a", self.on_press)
+        self.canvas.bind_all("e", self.on_press)
 
 
 if __name__ == '__main__':

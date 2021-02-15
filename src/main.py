@@ -1,4 +1,5 @@
 from Player import *
+from Enemy import *
 from Directions import *
 
 
