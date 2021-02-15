@@ -17,7 +17,8 @@ class Gui:
         self.canvas.pack()
 
         self.player = Player(self.canvas, 100)
-        self.enemy = Enemy(self.canvas, self.player)
+        self.enemy = Enemy(self.canvas, self.player, 50, 10, 0.1)
+        self.player.enemies.append(self.enemy)
         Thread(target=self.enemy.auto_move).start()
 
         self.win.mainloop()

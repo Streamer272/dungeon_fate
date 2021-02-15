@@ -88,14 +88,21 @@ class Player:
         self.knifing = False
 
     def die(self):
+        for enemy in self.enemies:
+            enemy.game_running = False
+
+        self.canvas.unbind_all("<Key>")
         self.sprite_file = PhotoImage(file="img/entities/player-dead.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
-        for enemy in self.enemies:
-            enemy.health = 0
 
     def take_damage(self, damage):
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
+        if self.health == 0:
+            self.die()
+            return None
+
+        print("Token damage")
         self.sprite_file = PhotoImage(file="img/entities/entity-damaged.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.change_image_back).start()
@@ -127,11 +134,7 @@ class PlayerListener:
             self.player.knife()
 
     def join(self):
-        self.canvas.bind_all("w", self.on_press)
-        self.canvas.bind_all("d", self.on_press)
-        self.canvas.bind_all("s", self.on_press)
-        self.canvas.bind_all("a", self.on_press)
-        self.canvas.bind_all("e", self.on_press)
+        self.canvas.bind_all("<Key>", self.on_press)
 
 
 if __name__ == '__main__':
