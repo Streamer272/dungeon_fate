@@ -43,11 +43,14 @@ class Gui:
         # enemy.x = 1920/2
         # enemy.y = 1080/2
         # self.player.enemies.append(enemy)
-        pistol = Weapon(self.player, "Pistol1")
+        self.pistol = Weapon(self.player, "Pistol1")
         sleep(3)
-        trajectory = pistol.get_bullet_track(100, 50)
+        Thread(target=self.run_bullet_test()).start()
+
+    def run_bullet_test(self):
+        trajectory = self.pistol.get_bullet_track(100, 50)
         print(str(trajectory))
-        pistol.shoot_bullet(trajectory)
+        self.pistol.shoot_bullet(trajectory)
 
     def start_mission(self) -> None:
         self.player = Player(self.canvas, health=100)

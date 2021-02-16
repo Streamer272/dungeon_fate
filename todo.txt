@@ -1,0 +1,5 @@
+fix bullets disappearing
+fix bullets trajectory
+fix player movement
+add flick animation
+add pause button

@@ -16,11 +16,9 @@ class Weapon:
         self.weapon_fire_rate = weapon_fire_rate
 
     def get_bullet_track(self, x1, y1):
-        x2 = self.player.x
+        print("Getting bullet track...")
         y2 = self.player.y
         x3 = x1 * (y2 / y1)
-        # c2 = sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
-        # c1 = sqrt((y1 ** 2) + (x3 ** 2))
 
         index = 0
         pixel_coordinates = []
@@ -32,15 +30,17 @@ class Weapon:
         return pixel_coordinates
 
     def shoot_bullet(self, trajectories):
+        print("Shooting bullet...")
         bullet_image = PhotoImage(file="img/bullet.png")
         self.canvas.image = bullet_image
         bullet = self.canvas.create_image(0, 0, anchor=N, image=bullet_image)
         Thread(target=self.move_bullet, args=(trajectories, bullet)).start()
 
     def move_bullet(self, trajectories, bullet):
+        print("Moving bullet")
         for i in range(len(trajectories)):
             trajectory = trajectories[-i-1]
-            print("Moving " + str(trajectory))
+            print("Moving on " + str(trajectory))
             self.canvas.coords(bullet, trajectory[0], trajectory[1])
             sleep(0.01)
 
