@@ -12,18 +12,21 @@ class Bullet:
         self.player = player
         self.canvas = self.player.canvas
 
-        self.x_percent = self.player.x / 100
-        self.y_percent = self.player.y / 100
-        self.player_x = self.player.x
-        self.player_y = self.player.y
+        self.start_x = self.player.x
+        self.start_y = self.player.y
         self.x = self.player.x
         self.y = self.player.y
-        self.x_destination = x_destination
-        self.y_destination = y_destination
+        self.end_x = x_destination
+        self.end_y = y_destination
 
         self.bullet_file = PhotoImage(file="img/bullet.png")
         self.bullet = self.canvas.create_image(self.x, self.y, anchor=N, image=self.bullet_file)
 
+    def move(self):
+        while 0 < self.x < 1920 and 0 < self.y < 1080:
+            pass
+
+    """
     def first_move(self) -> None:
         if self.player_x > self.x_destination and self.player.y > self.y_destination:
             self.x = self.x - self.x_percent
@@ -65,6 +68,7 @@ class Bullet:
         print("Moved on " + str(self.x) + ", " + str(self.y))
         self.canvas.coords(self.bullet, self.x, self.y)
         sleep(0.01)
+    """
 
 
 class Weapon:
@@ -79,10 +83,7 @@ class Weapon:
     def shoot_bullet(self) -> None:
         print("Shooting bullet...")
         bullet = Bullet(self.player, 200, 900)
-        bullet.first_move()
-
-        while 0 < bullet.x < 1920 and 0 < bullet.y < 1080:
-            bullet.move_next()
+        bullet.move()
 
         print("While loop ended")
 
