@@ -16,8 +16,8 @@ class Gui:
         self.canvas = Canvas(self.win, height=1080, width=1920, bg="white")
         self.canvas.pack()
 
-        Thread(target=self.start_mission).start()
-        # Thread(target=self.start_dev_test).start()
+        # Thread(target=self.start_mission).start()
+        Thread(target=self.start_dev_test).start()
 
         self.win.mainloop()
 
@@ -38,12 +38,16 @@ class Gui:
 
     def start_dev_test(self) -> None:
         self.player = Player(self.canvas, health=100)
-
-        enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
-        enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)
-        enemy.x = 1920/2
-        enemy.y = 1080/2
-        self.player.enemies.append(enemy)
+        # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
+        # enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)
+        # enemy.x = 1920/2
+        # enemy.y = 1080/2
+        # self.player.enemies.append(enemy)
+        pistol = Weapon(self.player, "Pistol1")
+        sleep(3)
+        trajectory = pistol.get_bullet_track(100, 50)
+        print(str(trajectory))
+        pistol.shoot_bullet(trajectory)
 
     def start_mission(self) -> None:
         self.player = Player(self.canvas, health=100)
