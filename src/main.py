@@ -1,6 +1,6 @@
 from json import loads
 
-from src.Enemy.Enemy import *
+from Enemy.Enemy import *
 
 
 class Gui:
@@ -17,7 +17,6 @@ class Gui:
         self.canvas.pack()
 
         self.player = Player(self.canvas, 100)
-        self.player.knife_damage = 100
         Thread(target=self.add_enemies).start()
 
         self.win.mainloop()

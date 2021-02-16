@@ -1,4 +1,4 @@
-from src.Global_Functions import *
+from Global_Functions import *
 
 
 class Player:
@@ -17,7 +17,7 @@ class Player:
         Thread(target=listener.join).start()
 
         self.knife_attack_running = False
-        self.knife_damage = 25
+        self.knife_damage = 50
         self.knife_attack_speed = 2
 
         self.flick_recharge_time = 5

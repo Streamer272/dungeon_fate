@@ -1,6 +1,6 @@
 from random import randint, choice
 
-from src.Player.Player import *
+from Player.Player import *
 
 
 class Enemy:
