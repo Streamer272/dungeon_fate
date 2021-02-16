@@ -54,7 +54,7 @@ class Gui:
                 sleep(1)
 
         say(self.canvas, text="Congratulations! You won!", timeout=10)
-        self.player.game_paused = True
+        self.player.is_game_paused = True
         sleep(10)
 
 

@@ -50,7 +50,7 @@ class Knife:
                 enemy.take_damage(self.knife_damage)
 
     def delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
-        while self.player.game_paused:
+        while self.player.is_game_paused:
             sleep(1)
 
         sleep(timeout)

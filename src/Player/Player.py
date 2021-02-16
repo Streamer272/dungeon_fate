@@ -1,4 +1,5 @@
 from Player.Knife import *
+from Player.Flick import *
 from Global_Functions import *
 
 
@@ -17,18 +18,14 @@ class Player:
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
 
-        self.flick_recharge_time = 5
-        self.flick_recharging = False
-        self.flick_distance = 150
+        self.knife = Knife.Knife(self.canvas, self, 25, 1)
+        self.flicker = Flicker(self.canvas, self, 250, 5)
 
         self.enemies = []
-        self.knife = Knife(self.canvas, self, 25, 1)
-        self.game_paused = False
+        self.is_game_paused = False
 
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                text="Health: " + str(self.health))
-        self.flick_recharge_label = canvas.create_text(1800, 110, font="Normal 14 normal normal",
-                                                       text="Flick: READY")
 
     def move(self, direction: int, steps: int) -> None:
         x = 0
@@ -61,49 +58,8 @@ class Player:
         self.direction = direction
         self.canvas.move(self.sprite, x, y)
 
-    def flick(self) -> None:
-        if self.flick_recharging:
-            return None
-
-        x = 0
-        y = 0
-
-        if self.direction == UP:
-            y -= self.flick_distance
-        elif self.direction == RIGHT:
-            x += self.flick_distance
-        elif self.direction == DOWN:
-            y += self.flick_distance
-        elif self.direction == LEFT:
-            x -= self.flick_distance
-
-        self.x += x
-        self.y += y
-
-        self.canvas.move(self.sprite, x, y)
-
-        self.flick_recharging = True
-        self.canvas.itemconfig(self.flick_recharge_label, text="Flick: Not Ready")
-        Thread(target=self.recharge_flick).start()
-
-    def recharge_flick(self):
-        while self.game_paused:
-            sleep(1)
-
-        slept = 0
-        while slept <= self.flick_recharge_time:
-            while self.game_paused:
-                sleep(1)
-            sleep(1)
-            self.canvas.itemconfig(self.flick_recharge_label,
-                                   text="Flick: Ready in " + str(self.flick_recharge_time - slept) + " seconds...")
-            slept += 1
-        self.flick_recharging = False
-        self.canvas.itemconfig(self.flick_recharge_label,
-                               text="Flick: READY")
-
     def start_die_animation(self) -> None:
-        while self.game_paused:
+        while self.is_game_paused:
             sleep(1)
 
         for enemy in self.enemies:
@@ -114,7 +70,7 @@ class Player:
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
-        while self.game_paused:
+        while self.is_game_paused:
             sleep(1)
 
         self.health -= damage
@@ -128,7 +84,7 @@ class Player:
         Thread(target=self.set_image_to_default).start()
 
     def set_image_to_default(self) -> None:
-        while self.game_paused:
+        while self.is_game_paused:
             sleep(1)
 
         sleep(0.2)
@@ -144,7 +100,7 @@ class PlayerListener:
         self.canvas = canvas
 
     def on_press(self, event: any) -> None:
-        if self.player.game_paused:
+        if self.player.is_game_paused:
             return None
 
         key = str(event.char).lower()
@@ -160,7 +116,7 @@ class PlayerListener:
         elif key == "e":
             self.player.knife.attack_with_knife()
         elif key == "f":
-            self.player.flick()
+            self.player.flicker.flick()
 
     def join(self) -> None:
         self.canvas.bind_all("<Key>", self.on_press)
