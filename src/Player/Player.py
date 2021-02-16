@@ -1,12 +1,13 @@
 from Player.Knife import *
 from Player.Flick import *
+from Player.Weapon import *
 from Global_Functions import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, start_health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+    def __init__(self, canvas: Canvas, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
-        self.health = start_health
+        self.health = health
         self.movement = movement
         self.x = x
         self.y = y
