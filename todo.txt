@@ -2,4 +2,6 @@ fix bullets disappearing
 fix bullets trajectory
 fix player movement
 add flick animation
-add pause button
+add game menu
+fix flick out of map
+add more abilities
