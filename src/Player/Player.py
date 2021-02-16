@@ -65,7 +65,7 @@ class Player:
         for enemy in self.enemies:
             enemy.game_running = False
 
-        self.canvas.unbind_all("<Key>")
+        self.is_game_paused = True
         self.sprite_file = PhotoImage(file="img/entities/player-dead.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 

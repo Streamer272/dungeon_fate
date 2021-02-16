@@ -30,6 +30,12 @@ class Gui:
 
         return dead_enemies == len(enemies)
 
+    def on_player_dead(self):
+        say(self.canvas, text="You lost!", timeout=10)
+        self.player.is_game_paused = True
+        sleep(10)
+        exit()
+
     def add_enemies(self) -> None:
         waves = loads(open("waves.json", "r").read())
         for wave in waves:
@@ -42,7 +48,7 @@ class Gui:
 
             for i in range(wave["enemy-count"]):
                 if self.player.health == 0:
-                    return None
+                    self.on_player_dead()
 
                 enemy = Enemy(self.canvas, self.player, wave["enemy"]["health"], wave["enemy"]["damage"], wave["enemy"]["attack-speed"])
                 self.player.enemies.append(enemy)
@@ -51,7 +57,12 @@ class Gui:
                 sleep(wave["spawn-timeout"])
 
             while not self.check_enemies_health(enemies):
+                if self.player.health == 0:
+                    self.on_player_dead()
                 sleep(1)
+
+            if self.player.health == 0:
+                self.on_player_dead()
 
         say(self.canvas, text="Congratulations! You won!", timeout=10)
         self.player.is_game_paused = True
