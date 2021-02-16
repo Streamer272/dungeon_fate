@@ -1,4 +1,5 @@
 from json import loads
+from typing import List
 
 from Enemy.Enemy import *
 
@@ -23,7 +24,7 @@ class Gui:
         self.win.mainloop()
 
     @staticmethod
-    def are_all_enemies_dead(enemies: list) -> bool:
+    def are_all_enemies_dead(enemies: List[Enemy]) -> bool:
         dead_enemies = 0
         for enemy in enemies:
             if enemy.health <= 0:
@@ -45,11 +46,12 @@ class Gui:
         # enemy.y = 1080/2
         # self.player.enemies.append(enemy)
         self.pistol = Weapon(self.player, "Pistol1")
-        sleep(3)
+        sleep(1)
         Thread(target=self.run_bullet_test()).start()
 
     def run_bullet_test(self):
         print("Running bullet test")
+        self.pistol.shoot_bullet()
 
     def start_mission(self) -> None:
         self.player = Player(self.canvas, health=100)
