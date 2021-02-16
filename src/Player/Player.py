@@ -1,3 +1,4 @@
+from Player.Knife import *
 from Global_Functions import *
 
 
@@ -16,23 +17,16 @@ class Player:
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
 
-        self.knife_attack_running = False
-        self.knife_damage = 50
-        self.knife_attack_speed = 2
-
         self.flick_recharge_time = 5
         self.flick_recharging = False
         self.flick_distance = 150
 
         self.enemies = []
+        self.knife = Knife(self.canvas, self, 25, 1)
         self.game_paused = False
 
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                text="Health: " + str(self.health))
-        self.knife_attack_speed_label = canvas.create_text(1820, 50, font="Normal 14 normal normal",
-                                                           text="Knife attack speed: " + str(self.knife_attack_speed))
-        self.knife_damage_label = canvas.create_text(1840, 80, font="Normal 14 normal normal",
-                                                     text="Knife damage: " + str(self.knife_damage))
         self.flick_recharge_label = canvas.create_text(1800, 110, font="Normal 14 normal normal",
                                                        text="Flick: READY")
 
@@ -66,46 +60,6 @@ class Player:
 
         self.direction = direction
         self.canvas.move(self.sprite, x, y)
-
-    def attack_with_knife(self) -> None:
-        if self.knife_attack_running:
-            return None
-
-        self.knife_attack_running = True
-        x = self.x
-        y = self.y
-        rotation = 0
-
-        if self.direction == UP:
-            y -= 50
-            rotation = 90
-        elif self.direction == RIGHT:
-            x += 50
-            rotation = 270
-        elif self.direction == DOWN:
-            y += 50
-            rotation = 180
-        elif self.direction == LEFT:
-            x -= 50
-            rotation = 0
-
-        knife_file = PhotoImage(file="img/knife/knife" + str(rotation) + ".png")
-        self.canvas.image = knife_file
-        knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
-        Thread(target=self.delete_knife, args=(knife, 0.25)).start()
-
-        for enemy in self.enemies:
-            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
-                enemy.take_damage(self.knife_damage)
-
-    def delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
-        while self.game_paused:
-            sleep(1)
-
-        sleep(timeout)
-        self.canvas.delete(knife_number)
-        sleep((1 / self.knife_attack_speed) - timeout)
-        self.knife_attack_running = False
 
     def flick(self) -> None:
         if self.flick_recharging:
@@ -165,7 +119,7 @@ class Player:
 
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
-        if self.health == 0:
+        if self.health <= 0:
             self.start_die_animation()
             return None
 
@@ -204,7 +158,7 @@ class PlayerListener:
         elif key == "a":
             self.player.move(LEFT, self.player.movement)
         elif key == "e":
-            self.player.attack_with_knife()
+            self.player.knife.attack_with_knife()
         elif key == "f":
             self.player.flick()
 
