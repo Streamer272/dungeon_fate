@@ -67,14 +67,29 @@ class Enemy:
 
             x = 0
             y = 0
+
+
             if self.x > self.player.x:
                 x -= 1
+
             elif self.x < self.player.x:
                 x += 1
+
+            elif self.x == self.player.x:
+                #Dunno if you want to have self.attack_enemy() here
+                pass
+
+
             if self.y > self.player.y:
                 y -= 1
+
             elif self.y < self.player.y:
                 y += 1
+
+            elif self.y < self.player.y:
+                #Dunno if you want to have self.attack_enemy() here
+                pass
+            
             self.y += y
             self.x += x
 
