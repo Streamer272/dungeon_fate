@@ -4,6 +4,7 @@ from Enemy.Enemy import *
 
 
 class Gui:
+    pistol: object
     player: Player
     canvas: Canvas
     win: Tk
@@ -48,9 +49,7 @@ class Gui:
         Thread(target=self.run_bullet_test()).start()
 
     def run_bullet_test(self):
-        trajectory = self.pistol.get_bullet_track(100, 50)
-        print(str(trajectory))
-        self.pistol.shoot_bullet(trajectory)
+        print("Running bullet test")
 
     def start_mission(self) -> None:
         self.player = Player(self.canvas, health=100)
