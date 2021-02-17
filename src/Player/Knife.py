@@ -30,16 +30,16 @@ class Knife:
 
         if self.player.direction == UP:
             y -= 50
-            rotation = 90
+            rotation = 0
         elif self.player.direction == RIGHT:
             x += 50
-            rotation = 270
+            rotation = 1
         elif self.player.direction == DOWN:
             y += 50
-            rotation = 180
+            rotation = 2
         elif self.player.direction == LEFT:
             x -= 50
-            rotation = 0
+            rotation = 3
 
         knife_file = PhotoImage(file="resource-packs/" + self.resource_pack + "/knife/knife" + str(rotation) + ".png")
         self.canvas.image = knife_file
