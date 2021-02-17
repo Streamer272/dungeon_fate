@@ -4,6 +4,9 @@ from Player.Player import *
 
 
 class Enemy:
+    move_to_y: object
+    move_to_x: object
+
     def __init__(self, canvas: Canvas, player: Player, health: int = 50, damage: int = 10,
                  attack_speed: float = 0.5) -> None:
         self.player = player
@@ -71,6 +74,9 @@ class Enemy:
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def auto_move(self) -> None:
+        self.move_to_x = 0
+        self.move_to_y = 0
+
         while self.health > 0 and self.game_running:
             self.attack_enemy()
             sleep(0.01)
@@ -78,19 +84,27 @@ class Enemy:
             x = 0
             y = 0
 
-            if self.x > self.player.x:
+            if self.player.invisible:
+                if self.move_to_x - self.player.movement <= self.player.x <= self.move_to_x + self.player.movement and self.move_to_y - self.player.movement <= self.player.y <= self.move_to_y + self.player.movement:
+                    self.move_to_y = randint(10, 1070)
+                    self.move_to_x = randint(10, 1910)
+            else:
+                self.move_to_x = self.player.x
+                self.move_to_y = self.player.y
+
+            if self.x > self.move_to_x:
                 x -= 1
                 self.direction = 3
 
-            elif self.x < self.player.x:
+            elif self.x < self.move_to_x:
                 x += 1
                 self.direction = 1
 
-            if self.y > self.player.y:
+            if self.y > self.move_to_y:
                 y -= 1
                 self.direction = 0
 
-            elif self.y < self.player.y:
+            elif self.y < self.move_to_y:
                 y += 1
                 self.direction = 2
 

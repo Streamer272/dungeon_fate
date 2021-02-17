@@ -3,15 +3,18 @@ from threading import Thread
 from time import sleep
 
 from Player.Knife import *
-from Player.Classes.Ninja.Flick import *
 from Player.Weapon import *
 from Global_Functions import *
+
+from Player.Operators.Ninja.Flicker import *
+from Player.Operators.Ghost.Ghost import *
 
 
 class Player:
     def __init__(self, canvas: Canvas, resource_pack_name: str, class_: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
+        self.invisible = False
         self.movement = movement
         self.x = x
         self.y = y
@@ -31,6 +34,8 @@ class Player:
         self.class_ = class_
         if self.class_ == "Ninja":
             self.ability = Flicker(self.canvas, self, 250, 5)
+        elif self.class_ == "Ghost":
+            self.ability = Ghost(self.canvas, self, 3, 10)
         else:
             self.ability = Flicker(self.canvas, self, 250, 5)
 
@@ -92,6 +97,9 @@ class Player:
     def take_damage(self, damage: int) -> None:
         while self.is_game_paused:
             sleep(1)
+
+        if self.invisible:
+            return None
 
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))

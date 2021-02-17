@@ -1,0 +1,4 @@
+Passive ability:
+    after killing enemy, player becomes invisible for 1 second
+Active ability:
+    player can make himself invisible for 3 seconds

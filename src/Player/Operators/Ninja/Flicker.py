@@ -11,6 +11,7 @@ class Flicker:
         self.canvas = canvas
         self.player = player
 
+        self.player.movement += 5
         self.flick_distance = flick_distance
         self.flick_recharge_time = flick_recharge_time
         self.is_flick_recharging = False
@@ -55,6 +56,7 @@ class Flicker:
             self.canvas.itemconfig(self.flick_recharge_label,
                                    text="Flick: Ready in " + str(self.flick_recharge_time - slept) + " seconds...")
             slept += 1
+
         self.is_flick_recharging = False
         self.canvas.itemconfig(self.flick_recharge_label,
                                text="Flick: READY")

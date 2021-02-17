@@ -6,6 +6,6 @@ Fixes:
 
 Features:
     add flick animation
-    add more abilities
+    add more operators
     add more options to game menu
     finish memer resource pack

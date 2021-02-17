@@ -8,9 +8,9 @@ from Enemy.Enemy import *
 
 
 class Gui:
-    class_label: Label
-    class_: StringVar
-    class_option_menu: OptionMenu
+    operator_label: Label
+    operator: StringVar
+    operator_option_menu: OptionMenu
     resource_pack_label: Label
     exit_button: Button
     resource_pack_option_menu: OptionMenu
@@ -29,36 +29,40 @@ class Gui:
         self.canvas = Canvas(self.win, height=1080, width=1920, bg="white")
         self.canvas.pack()
 
-        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"), command=self.start_game)
-        self.start_button.place(x=1920/2-45, y=1080/2+150)
         self.exit_button = Button(self.win, text="Exit", font=("Normal", 15, "normal"), command=self.exit_game)
         self.exit_button.place(x=15, y=15)
 
+        self.create_menu()
+
+        self.win.focus_force()
+        self.win.mainloop()
+
+    def create_menu(self):
+        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"), command=self.start_game)
+        self.start_button.place(x=1920 / 2 - 45, y=1080 / 2 + 150)
+
         self.resource_pack_label = Label(self.win, text="Resource pack: ")
-        self.resource_pack_label.place(x=1920/2-110, y=1080/2+5+100)
+        self.resource_pack_label.place(x=1920 / 2 - 110, y=1080 / 2 + 5 + 100)
         self.resource_pack = StringVar(self.win)
         self.resource_pack.set("basic")
         resource_pack_options = listdir("resource-packs")
         self.resource_pack_option_menu = OptionMenu(self.win, self.resource_pack, *resource_pack_options)
-        self.resource_pack_option_menu.place(x=1920/2-20, y=1080/2+100)
+        self.resource_pack_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 100)
 
-        self.class_label = Label(self.win, text="Classes: ")
-        self.class_label.place(x=1920 / 2 - 70, y=1080 / 2 + 5 + 50)
-        self.class_ = StringVar(self.win)
-        self.class_.set("Ninja")
-        classes_options = listdir("Player/Classes")
-        self.class_option_menu = OptionMenu(self.win, self.class_, *classes_options)
-        self.class_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 50)
-
-        self.win.focus_force()
-        self.win.mainloop()
+        self.operator_label = Label(self.win, text="Operators: ")
+        self.operator_label.place(x=1920 / 2 - 70, y=1080 / 2 + 5 + 50)
+        self.operator = StringVar(self.win)
+        self.operator.set("Ninja")
+        classes_options = listdir("Player/Operators")
+        self.operator_option_menu = OptionMenu(self.win, self.operator, *classes_options)
+        self.operator_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 50)
 
     def start_game(self):
         self.start_button.place_forget()
         self.resource_pack_label.place_forget()
         self.resource_pack_option_menu.place_forget()
-        self.class_label.place_forget()
-        self.class_option_menu.place_forget()
+        self.operator_label.place_forget()
+        self.operator_option_menu.place_forget()
         Thread(target=self.start_mission).start()
         # Thread(target=self.start_dev_test).start()
 
@@ -82,7 +86,7 @@ class Gui:
         exit()
 
     def start_dev_test(self) -> None:
-        self.player = Player(self.canvas, self.resource_pack.get(), self.class_.get(), health=100)
+        self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)
         # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
         # enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)
         # enemy.x = 1920/2
@@ -97,7 +101,7 @@ class Gui:
         self.pistol.shoot_bullet()
 
     def start_mission(self) -> None:
-        self.player = Player(self.canvas, self.resource_pack.get(), self.class_.get(), health=100)
+        self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)
 
         waves = loads(open("waves.json", "r").read())
         for wave in waves:
