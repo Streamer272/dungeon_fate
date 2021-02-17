@@ -11,7 +11,7 @@ from Player.Operators.Ghost.Ghost import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, resource_pack_name: str, class_: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+    def __init__(self, canvas: Canvas, resource_pack_name: str, operator: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
         self.invisible = False
@@ -31,10 +31,10 @@ class Player:
 
         self.knife = Knife.Knife(self.canvas, self, 25, 1)
 
-        self.class_ = class_
-        if self.class_ == "Ninja":
+        self.operator = operator
+        if self.operator == "Ninja":
             self.operator = Dash(self.canvas, self, 250, 5)
-        elif self.class_ == "Ghost":
+        elif self.operator == "Ghost":
             self.operator = Ghost(self.canvas, self, 3, 10)
         else:
             self.operator = Dash(self.canvas, self, 250, 5)

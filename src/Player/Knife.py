@@ -4,8 +4,8 @@ from Player import *
 
 
 class Knife:
-    def __init__(self, canvas: Canvas, player, knife_damage: int = 25, knife_attack_speed: int = 1):
-        self.canvas = canvas
+    def __init__(self, player, knife_damage: int = 25, knife_attack_speed: int = 1):
+        self.canvas = player.canvas
         self.resource_pack = player.resource_pack
         self.player = player
 

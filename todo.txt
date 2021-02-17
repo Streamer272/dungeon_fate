@@ -2,10 +2,8 @@ Fixes:
     fix bullets disappearing
     fix bullets trajectory
     fix player movement
-    remove unused code / optimize app
 
 Features:
-    add flick animation
     add more operators (throwing knives, teleport)
     add more options to game menu
     finish memer resource pack

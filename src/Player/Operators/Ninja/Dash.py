@@ -8,8 +8,8 @@ from Player import *
 
 
 class Dash:
-    def __init__(self, canvas: Canvas, player, dash_distance: int = 250, dash_recharge_time: int = 5, dash_damage: int = 50):
-        self.canvas = canvas
+    def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 5, dash_damage: int = 50):
+        self.canvas = player.canvas
         self.player = player
 
         self.player.movement += 10
@@ -43,18 +43,6 @@ class Dash:
         self.is_dash_recharging = True
         self.canvas.itemconfig(self.dash_recharge_label, text="Dash: Not Ready")
         Thread(target=self.recharge_dash).start()
-
-        # for everyone reading this code, its a bug in tkinter, so we cant use for loop because the animation
-        # wont play right, so we need to do this
-        # dash_to_x1 = floor(self.player.x + (x / 3) * 1)
-        # dash_to_y1 = floor(self.player.y + (y / 3) * 1)
-        # dash_to_x2 = floor(self.player.x + (x / 3) * 2)
-        # dash_to_y2 = floor(self.player.y + (y / 3) * 2)
-        # dash_to_x3 = floor(self.player.x + (x / 3) * 3)
-        # dash_to_y3 = floor(self.player.y + (y / 3) * 3)
-        # Thread(target=self.move, args=[dash_to_x1, dash_to_y1, 0]).start()
-        # Thread(target=self.move, args=[dash_to_x2, dash_to_y2, 0.05]).start()
-        # Thread(target=self.move, args=[dash_to_x3, dash_to_y3, 0.1]).start()
 
         for i in range(floor(self.dash_distance / 50)):
             dash_to_x = floor(self.player.x + (x / (self.dash_distance / 50)) * (i + 1))

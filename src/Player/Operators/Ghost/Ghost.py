@@ -7,8 +7,8 @@ from Player import *
 
 
 class Ghost:
-    def __init__(self, canvas: Canvas, player, ghost_duration: int = 3, ghost_recharge_time: int = 10):
-        self.canvas = canvas
+    def __init__(self, player, ghost_duration: int = 3, ghost_recharge_time: int = 10):
+        self.canvas = player.canvas
         self.player = player
 
         self.ghost_duration = ghost_duration

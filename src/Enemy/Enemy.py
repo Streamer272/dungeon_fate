@@ -7,7 +7,7 @@ class Enemy:
     move_to_y: object
     move_to_x: object
 
-    def __init__(self, canvas: Canvas, player: Player, health: int = 50, damage: int = 10,
+    def __init__(self, player: Player, health: int = 50, damage: int = 10,
                  attack_speed: float = 0.5) -> None:
         self.player = player
         self.health = health
@@ -21,7 +21,7 @@ class Enemy:
 
         self.x, self.y = self.generate_spawn_position()
 
-        self.canvas = canvas
+        self.canvas = player.canvas
         self.resource_pack = self.player.resource_pack
         self.dont_change_image_protocol = False
         self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
