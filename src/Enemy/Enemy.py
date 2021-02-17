@@ -72,6 +72,7 @@ class Enemy:
     def set_image_to_default(self) -> None:
         sleep(0.2)
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png":
+            self.dont_change_image_protocol = False
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
