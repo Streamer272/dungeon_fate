@@ -50,7 +50,7 @@ class Gui:
         self.resource_pack_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 100)
 
         self.operator_label = Label(self.win, text="Operators: ")
-        self.operator_label.place(x=1920 / 2 - 70, y=1080 / 2 + 5 + 50)
+        self.operator_label.place(x=1920 / 2 - 85, y=1080 / 2 + 5 + 50)
         self.operator = StringVar(self.win)
         self.operator.set("Ninja")
         classes_options = listdir("Player/Operators")

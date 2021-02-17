@@ -1,4 +1,4 @@
 Passive ability:
-    player movement speed increases by 5
+    player movement speed increases by 10
 Active ability:
     player can teleport on short distance

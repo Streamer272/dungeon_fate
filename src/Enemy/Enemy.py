@@ -45,6 +45,9 @@ class Enemy:
         return x, y
 
     def attack_enemy(self) -> None:
+        if self.player.invisible:
+            return None
+
         if self.player.x - 50 < self.x < self.player.x + 50 and self.player.y - 50 < self.y < self.player.y + 50 and not self.charging_attack:
             self.player.take_damage(self.damage)
             self.charging_attack = True
@@ -78,6 +81,9 @@ class Enemy:
         self.move_to_y = 0
 
         while self.health > 0 and self.game_running:
+            if self.player.health <= 0:
+                break
+
             self.attack_enemy()
             sleep(0.01)
 

@@ -46,9 +46,13 @@ class Knife:
         knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
         Thread(target=self.delete_knife, args=(knife, 0.25)).start()
 
+        self.player.operator.on_player_knife()
+
         for enemy in self.player.enemies:
             if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
                 enemy.take_damage(self.knife_damage)
+                if enemy.health <= 0:
+                    self.player.operator.on_enemy_killed()
 
     def delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
         while self.player.is_game_paused:

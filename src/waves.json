@@ -28,5 +28,25 @@
       "damage": 20,
       "attack-speed": 1
     }
+  },
+  {
+    "name": "Forth wave",
+    "enemy-count": 15,
+    "spawn-timeout": 2,
+    "enemy": {
+      "health": 100,
+      "damage": 25,
+      "attack-speed": 1
+    }
+  },
+  {
+    "name": "Final Boss",
+    "enemy-count": 1,
+    "spawn-timeout": 3,
+    "enemy": {
+      "health": 500,
+      "damage": 50,
+      "attack-speed": 5
+    }
   }
 ]

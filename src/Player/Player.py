@@ -6,7 +6,7 @@ from Player.Knife import *
 from Player.Weapon import *
 from Global_Functions import *
 
-from Player.Operators.Ninja.Flicker import *
+from Player.Operators.Ninja.Dash import *
 from Player.Operators.Ghost.Ghost import *
 
 
@@ -33,11 +33,11 @@ class Player:
 
         self.class_ = class_
         if self.class_ == "Ninja":
-            self.ability = Flicker(self.canvas, self, 250, 5)
+            self.operator = Dash(self.canvas, self, 250, 5)
         elif self.class_ == "Ghost":
-            self.ability = Ghost(self.canvas, self, 3, 10)
+            self.operator = Ghost(self.canvas, self, 3, 10)
         else:
-            self.ability = Flicker(self.canvas, self, 250, 5)
+            self.operator = Dash(self.canvas, self, 250, 5)
 
         self.enemies = []
         self.is_game_paused = False
@@ -87,16 +87,22 @@ class Player:
         for enemy in self.enemies:
             enemy.game_running = False
 
-        self.is_game_paused = True
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/player-dead.png":
-            self.dont_change_image_protocol = True
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/player-dead.png"
-            self.sprite_file = PhotoImage(file=self.current_image_file)
-            self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        self.operator.on_player_dead()
+
+        if self.health <= 0:
+            self.is_game_paused = True
+            if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/player-dead.png":
+                self.dont_change_image_protocol = True
+                self.current_image_file = "resource-packs/" + self.resource_pack + "/player/player-dead.png"
+                self.sprite_file = PhotoImage(file=self.current_image_file)
+                self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
         while self.is_game_paused:
             sleep(1)
+
+        if self.health >= 0:
+            pass
 
         if self.invisible:
             return None
@@ -106,6 +112,8 @@ class Player:
         if self.health <= 0:
             self.start_die_animation()
             return None
+
+        self.operator.on_take_damage()
 
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
@@ -150,7 +158,7 @@ class PlayerListener:
         elif key == "e":
             self.player.knife.attack_with_knife()
         elif key == "f":
-            self.player.ability.use()
+            self.player.operator.use()
 
     def join(self) -> None:
         self.canvas.bind_all("<Key>", self.on_press)
