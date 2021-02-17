@@ -17,8 +17,19 @@ def test() -> any:
     a = 4
     b = 5
 
-    print(a / b)
-    print(2 * (b / a))
+    print("Ratio: " + str(b / a))
+
+    c_c_x = 100  # coordinates of point C
+    c_c_y = 300  # coordinates of point C
+
+    # f = coordinate we want to find
+    f_x = (c_c_x / b) * (2 * (b / a))
+    f_y = (c_c_y / b) * (2 * (b / a))
+    f_d = 2 * (b / a)
+
+    print("F_D: " + str(f_d))
+    print("F x: " + str(f_x))
+    print("F y: " + str(f_y))
 
 
 if __name__ == '__main__':
