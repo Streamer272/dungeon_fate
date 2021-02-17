@@ -116,7 +116,7 @@ class Gui:
                 if self.player.health == 0:
                     self.on_player_dead()
 
-                enemy = Enemy(self.canvas, self.player, wave["enemy"]["health"], wave["enemy"]["damage"], wave["enemy"]["attack-speed"])
+                enemy = Enemy(self.player, wave["enemy"]["health"], wave["enemy"]["damage"], wave["enemy"]["attack-speed"])
                 self.player.enemies.append(enemy)
                 enemies.append(enemy)
                 Thread(target=enemy.auto_move).start()

@@ -15,6 +15,7 @@ class Player:
         self.direction = UP
         self.health = health
         self.invisible = False
+        self.dont_take_damage_protocol = False
         self.movement = movement
         self.x = x
         self.y = y
@@ -26,21 +27,21 @@ class Player:
         self.sprite_file = PhotoImage(file=self.current_image_file)
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
-        listener = PlayerListener(self, self.canvas)
-        Thread(target=listener.join).start()
-
-        self.knife = Knife.Knife(self.canvas, self, 25, 1)
+        self.knife = Knife.Knife(self, 25, 1)
 
         self.operator = operator
         if self.operator == "Ninja":
-            self.operator = Dash(self.canvas, self, 250, 5)
+            self.operator = Dash(self, 250, 5)
         elif self.operator == "Ghost":
-            self.operator = Ghost(self.canvas, self, 3, 10)
+            self.operator = Ghost(self, 3, 10)
         else:
-            self.operator = Dash(self.canvas, self, 250, 5)
+            self.operator = Dash(self, 250, 5)
 
         self.enemies = []
         self.is_game_paused = False
+
+        listener = PlayerListener(self, self.canvas)
+        Thread(target=listener.join).start()
 
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                text="Health: " + str(self.health))
@@ -104,7 +105,7 @@ class Player:
         if self.health >= 0:
             pass
 
-        if self.invisible:
+        if self.invisible or self.dont_take_damage_protocol:
             return None
 
         self.health -= damage
