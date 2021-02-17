@@ -1,4 +1,7 @@
 from tkinter import *
+from time import sleep
+from threading import Thread
+
 from Global_Functions import *
 from Player import *
 

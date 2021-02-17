@@ -18,7 +18,8 @@ class Enemy:
         self.x, self.y = self.generate_spawn_position()
 
         self.canvas = canvas
-        self.enemy_file = PhotoImage(file="img/entities/enemy.png")
+        self.resource_pack = self.player.resource_pack
+        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy.png")
         self.enemy = self.canvas.create_image(self.x, self.y, anchor=N, image=self.enemy_file)
 
     def generate_spawn_position(self):
@@ -49,7 +50,7 @@ class Enemy:
 
     def take_damage(self, damage: int) -> None:
         self.health -= damage
-        self.enemy_file = PhotoImage(file="img/entities/entity-damaged.png")
+        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/entity-damaged.png")
         self.canvas.itemconfig(self.enemy, image=self.enemy_file)
         if self.health <= 0:
             self.die()
@@ -58,7 +59,7 @@ class Enemy:
 
     def set_image_to_default(self) -> None:
         sleep(0.2)
-        self.enemy_file = PhotoImage(file="img/entities/enemy.png")
+        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy.png")
         self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def auto_move(self) -> None:
@@ -92,7 +93,7 @@ class Enemy:
         self.destroy()
 
     def die(self) -> None:
-        self.enemy_file = PhotoImage(file="img/entities/enemy-dead.png")
+        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy-dead.png")
         self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def destroy(self) -> None:

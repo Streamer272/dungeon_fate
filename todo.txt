@@ -3,5 +3,6 @@ fix bullets trajectory
 fix player movement
 add flick animation
 add game menu
+add resource pack choice
 fix flick out of map
 add more abilities

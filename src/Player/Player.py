@@ -1,3 +1,7 @@
+from tkinter import *
+from threading import Thread
+from time import sleep
+
 from Player.Knife import *
 from Player.Flick import *
 from Player.Weapon import *
@@ -5,7 +9,7 @@ from Global_Functions import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+    def __init__(self, canvas: Canvas, resource_pack_name: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
         self.movement = movement
@@ -13,7 +17,8 @@ class Player:
         self.y = y
 
         self.canvas = canvas
-        self.sprite_file = PhotoImage(file="img/entities/player.png")
+        self.resource_pack = resource_pack_name
+        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player.png")
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
         listener = PlayerListener(self, self.canvas)
@@ -67,7 +72,7 @@ class Player:
             enemy.game_running = False
 
         self.is_game_paused = True
-        self.sprite_file = PhotoImage(file="img/entities/player-dead.png")
+        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player-dead.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
@@ -80,7 +85,7 @@ class Player:
             self.start_die_animation()
             return None
 
-        self.sprite_file = PhotoImage(file="img/entities/entity-damaged.png")
+        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/entity-damaged.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.set_image_to_default).start()
 
@@ -89,7 +94,7 @@ class Player:
             sleep(1)
 
         sleep(0.2)
-        self.sprite_file = PhotoImage(file="img/entities/player.png")
+        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player.png")
         self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         if self.health == 0:
             self.start_die_animation()
