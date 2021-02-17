@@ -53,9 +53,9 @@ class Enemy:
 
     def take_damage(self, damage: int) -> None:
         self.health -= damage
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/enemy-damaged.png" and not self.dont_change_image_protocol:
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/enemy-damaged.png"
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
         if self.health <= 0:

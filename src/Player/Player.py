@@ -94,9 +94,9 @@ class Player:
             self.start_die_animation()
             return None
 
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/player-damaged.png" and not self.dont_change_image_protocol:
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/player-damaged.png"
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.set_image_to_default).start()
