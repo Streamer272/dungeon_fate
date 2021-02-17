@@ -6,6 +6,7 @@ from Player import *
 class Knife:
     def __init__(self, canvas: Canvas, player, knife_damage: int = 25, knife_attack_speed: int = 1):
         self.canvas = canvas
+        self.resource_pack = player.resource_pack
         self.player = player
 
         self.knife_damage = knife_damage
@@ -40,7 +41,7 @@ class Knife:
             x -= 50
             rotation = 0
 
-        knife_file = PhotoImage(file="img/knife/knife" + str(rotation) + ".png")
+        knife_file = PhotoImage(file="resource-packs/" + self.resource_pack + "/knife/knife" + str(rotation) + ".png")
         self.canvas.image = knife_file
         knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
         Thread(target=self.delete_knife, args=(knife, 0.25)).start()

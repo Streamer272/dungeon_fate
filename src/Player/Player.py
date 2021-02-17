@@ -18,7 +18,9 @@ class Player:
 
         self.canvas = canvas
         self.resource_pack = resource_pack_name
-        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player.png")
+        self.dont_change_image_protocol = False
+        self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+        self.sprite_file = PhotoImage(file=self.current_image_file)
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
         listener = PlayerListener(self, self.canvas)
@@ -63,6 +65,10 @@ class Player:
 
         self.direction = direction
         self.canvas.move(self.sprite, x, y)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+            self.sprite_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def start_die_animation(self) -> None:
         while self.is_game_paused:
@@ -72,8 +78,11 @@ class Player:
             enemy.game_running = False
 
         self.is_game_paused = True
-        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player-dead.png")
-        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/player-dead.png":
+            self.dont_change_image_protocol = True
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/player-dead.png"
+            self.sprite_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
         while self.is_game_paused:
@@ -85,8 +94,11 @@ class Player:
             self.start_die_animation()
             return None
 
-        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/entity-damaged.png")
-        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/player-damaged.png" and not self.dont_change_image_protocol:
+            self.dont_change_image_protocol = True
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/player-damaged.png"
+            self.sprite_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.set_image_to_default).start()
 
     def set_image_to_default(self) -> None:
@@ -94,8 +106,11 @@ class Player:
             sleep(1)
 
         sleep(0.2)
-        self.sprite_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/player.png")
-        self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png":
+            self.dont_change_image_protocol = False
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+            self.sprite_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         if self.health == 0:
             self.start_die_animation()
 

@@ -10,6 +10,7 @@ class Enemy:
         self.health = health
         self.game_running = True
         self.despawn_timer = 10
+        self.direction = 0
 
         self.damage = damage
         self.charging_attack = False
@@ -19,7 +20,9 @@ class Enemy:
 
         self.canvas = canvas
         self.resource_pack = self.player.resource_pack
-        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy.png")
+        self.dont_change_image_protocol = False
+        self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
+        self.enemy_file = PhotoImage(file=self.current_image_file)
         self.enemy = self.canvas.create_image(self.x, self.y, anchor=N, image=self.enemy_file)
 
     def generate_spawn_position(self):
@@ -50,8 +53,11 @@ class Enemy:
 
     def take_damage(self, damage: int) -> None:
         self.health -= damage
-        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/entity-damaged.png")
-        self.canvas.itemconfig(self.enemy, image=self.enemy_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/enemy-damaged.png" and not self.dont_change_image_protocol:
+            self.dont_change_image_protocol = True
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/enemy-damaged.png"
+            self.enemy_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.enemy, image=self.enemy_file)
         if self.health <= 0:
             self.die()
             return None
@@ -59,8 +65,10 @@ class Enemy:
 
     def set_image_to_default(self) -> None:
         sleep(0.2)
-        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy.png")
-        self.canvas.itemconfig(self.enemy, image=self.enemy_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png":
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
+            self.enemy_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def auto_move(self) -> None:
         while self.health > 0 and self.game_running:
@@ -72,20 +80,28 @@ class Enemy:
 
             if self.x > self.player.x:
                 x -= 1
+                self.direction = 3
 
             elif self.x < self.player.x:
                 x += 1
+                self.direction = 1
 
             if self.y > self.player.y:
                 y -= 1
+                self.direction = 0
 
             elif self.y < self.player.y:
                 y += 1
+                self.direction = 2
 
             self.y += y
             self.x += x
 
             self.canvas.move(self.enemy, x, y)
+            if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
+                self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
+                self.enemy_file = PhotoImage(file=self.current_image_file)
+                self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
         if self.health <= 0:
             self.die()
@@ -93,8 +109,11 @@ class Enemy:
         self.destroy()
 
     def die(self) -> None:
-        self.enemy_file = PhotoImage(file="resource-pack/" + self.resource_pack + "/entities/enemy-dead.png")
-        self.canvas.itemconfig(self.enemy, image=self.enemy_file)
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/enemy-dead.png":
+            self.dont_change_image_protocol = True
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/enemy-dead.png"
+            self.enemy_file = PhotoImage(file=self.current_image_file)
+            self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
     def destroy(self) -> None:
         self.canvas.delete(self.enemy)

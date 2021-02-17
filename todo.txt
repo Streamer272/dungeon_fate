@@ -1,8 +1,11 @@
-fix bullets disappearing
-fix bullets trajectory
-fix player movement
-add flick animation
-add game menu
-add resource pack choice
-fix flick out of map
-add more abilities
+Fixes:
+    fix bullets disappearing
+    fix bullets trajectory
+    fix player movement
+    fix knife file names
+    fix flick out of map
+
+Features:
+    add flick animation
+    add more abilities
+    add more options to game menu

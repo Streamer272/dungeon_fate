@@ -34,7 +34,7 @@ class Gui:
         self.resource_pack_label.place(x=1920/2-110, y=1080/2+5+100)
         self.resource_pack = StringVar(self.win)
         self.resource_pack.set("basic")
-        options = listdir("resource-pack")
+        options = listdir("resource-packs")
         self.resource_pack_option_menu = OptionMenu(self.win, self.resource_pack, *options)
         self.resource_pack_option_menu.place(x=1920/2-20, y=1080/2+100)
 
