@@ -3,13 +3,13 @@ from threading import Thread
 from time import sleep
 
 from Player.Knife import *
-from Player.Flick import *
+from Player.Classes.Ninja.Flick import *
 from Player.Weapon import *
 from Global_Functions import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, resource_pack_name: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+    def __init__(self, canvas: Canvas, resource_pack_name: str, class_: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
         self.movement = movement
@@ -27,7 +27,12 @@ class Player:
         Thread(target=listener.join).start()
 
         self.knife = Knife.Knife(self.canvas, self, 25, 1)
-        self.flicker = Flicker(self.canvas, self, 250, 5)
+
+        self.class_ = class_
+        if self.class_ == "Ninja":
+            self.ability = Flicker(self.canvas, self, 250, 5)
+        else:
+            self.ability = Flicker(self.canvas, self, 250, 5)
 
         self.enemies = []
         self.is_game_paused = False
@@ -137,7 +142,7 @@ class PlayerListener:
         elif key == "e":
             self.player.knife.attack_with_knife()
         elif key == "f":
-            self.player.flicker.flick()
+            self.player.ability.use()
 
     def join(self) -> None:
         self.canvas.bind_all("<Key>", self.on_press)

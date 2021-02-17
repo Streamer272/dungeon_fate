@@ -18,7 +18,7 @@ class Flicker:
         self.flick_recharge_label = self.canvas.create_text(1800, 110, font="Normal 14 normal normal",
                                                             text="Flick: READY")
 
-    def flick(self) -> None:
+    def use(self) -> None:
         if self.is_flick_recharging:
             return None
 
