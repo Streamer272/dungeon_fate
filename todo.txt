@@ -2,8 +2,9 @@ Fixes:
     fix bullets disappearing
     fix bullets trajectory
     fix player movement
+    fix enemies on wave 3
 
 Features:
     add more operators (throwing knives, teleport)
     add more options to game menu
-    finish memer resource pack
+    add weapons
