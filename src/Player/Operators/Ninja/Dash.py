@@ -61,12 +61,15 @@ class Dash:
             dash_to_y = floor(self.player.y + (y / (self.dash_distance / 50)) * (i + 1))
             Thread(target=self.move, args=[dash_to_x, dash_to_y, 0.05 * (i + 1)]).start()
 
-        self.player.x += x
-        self.player.y += y
-
     def move(self, x: int, y: int, timeout: float = 0):
+        if not (0 < x < 1920) or not (0 < y < 1080):
+            return None
+
         sleep(timeout)
         self.canvas.coords(self.player.sprite, x, y)
+
+        self.player.x = x
+        self.player.y = y
 
         for enemy in self.player.enemies:
             if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
