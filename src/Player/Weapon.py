@@ -23,52 +23,15 @@ class Bullet:
         self.bullet = self.canvas.create_image(self.x, self.y, anchor=N, image=self.bullet_file)
 
     def move(self):
+        x1 = self.end_x
+        y1 = self.end_y
+        x2 = self.player.x
+        y2 = self.player.y
+        c2 = sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
+        c1 = sqrt((y1 ** 2) + ((x1 * (y2 / y1)) ** 2))
+        ratio = (c1 + c2) / y2
         while 0 < self.x < 1920 and 0 < self.y < 1080:
             pass
-
-    """
-    def first_move(self) -> None:
-        if self.player_x > self.x_destination and self.player.y > self.y_destination:
-            self.x = self.x - self.x_percent
-            self.y = self.y - self.y_percent
-        elif self.player_x < self.x_destination and self.player.y > self.y_destination:
-            self.x = self.x + self.x_percent
-            self.y = self.y - self.y_percent
-        elif self.player_x < self.x_destination and self.player.y < self.y_destination:
-            self.x = self.x - self.x_percent
-            self.y = self.y + self.y_percent
-        elif self.player_x > self.x_destination and self.player.y < self.y_destination:
-            self.x = self.x + self.x_percent
-            self.y = self.y + self.y_percent
-        else:
-            self.x = self.x + self.x_percent
-            self.y = self.y + self.y_percent
-
-        print("First bullet move done!")
-        self.canvas.coords(self.bullet, self.x, self.y)
-
-    def to_floor(self):
-        self.x = floor(self.x)
-        self.y = floor(self.y)
-
-    def move_next(self) -> None:
-        if self.player_x > self.x and self.player_y > self.y:
-            self.x = self.x - self.x_percent
-            self.y = self.y - self.y_percent
-        elif self.player_x < self.x and self.player_y > self.y:
-            self.x = self.x + self.x_percent
-            self.y = self.y - self.y_percent
-        elif self.player_x < self.x and self.player_y < self.y:
-            self.x = self.x - self.x_percent
-            self.y = self.y + self.y_percent
-        elif self.player_x > self.x and self.player_y < self.y:
-            self.x = self.x + self.x_percent
-            self.y = self.y + self.y_percent
-
-        print("Moved on " + str(self.x) + ", " + str(self.y))
-        self.canvas.coords(self.bullet, self.x, self.y)
-        sleep(0.01)
-    """
 
 
 class Weapon:
