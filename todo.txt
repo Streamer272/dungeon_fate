@@ -4,6 +4,7 @@ Fixes:
     fix die animation
     fix enemies on wave 3
     fix enemies still spawning after death (wave 4)
+    fix pause and resume game
 
 Features:
     add more operators (throwing knives, freeze time)

@@ -54,9 +54,11 @@ class Player:
                                                text="Health: " + str(self.health))
 
     def pause_game(self):
+        print("Pausing game")
         self.is_game_paused = True
 
     def resume_game(self):
+        print("Resuming game")
         self.is_game_paused = False
 
     def move(self, direction: int, steps: int) -> None:
@@ -182,7 +184,7 @@ class PlayerListener:
         elif key == "f":
             Thread(target=self.player.operator.use, args=[]).start()
 
-    def toggle_pause(self):
+    def toggle_pause(self, event):
         if self.player.is_game_paused:
             self.player.resume_game()
         else:
@@ -190,7 +192,6 @@ class PlayerListener:
 
     def join(self) -> None:
         self.canvas.bind_all("<Escape>", self.toggle_pause)
-
         while True:
             while self.player.is_game_paused:
                 sleep(1)
