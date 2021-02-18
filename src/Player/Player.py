@@ -53,6 +53,12 @@ class Player:
         self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                text="Health: " + str(self.health))
 
+    def pause_game(self):
+        self.is_game_paused = True
+
+    def resume_game(self):
+        self.is_game_paused = False
+
     def move(self, direction: int, steps: int) -> None:
         if self.is_moving:
             return None
@@ -176,7 +182,15 @@ class PlayerListener:
         elif key == "f":
             Thread(target=self.player.operator.use, args=[]).start()
 
+    def toggle_pause(self):
+        if self.player.is_game_paused:
+            self.player.resume_game()
+        else:
+            self.player.pause_game()
+
     def join(self) -> None:
+        self.canvas.bind_all("<Escape>", self.toggle_pause)
+
         while True:
             while self.player.is_game_paused:
                 sleep(1)

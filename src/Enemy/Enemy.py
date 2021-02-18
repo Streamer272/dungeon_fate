@@ -2,6 +2,7 @@ from random import randint, choice
 from math import floor
 from tkinter import *
 from threading import Thread
+from time import sleep
 
 from Player.Player import *
 
@@ -85,6 +86,9 @@ class Enemy:
         self.move_to_y = 0
 
         while self.health > 0 and self.game_running:
+            while self.player.is_game_paused:
+                sleep(1)
+
             if self.player.health <= 0:
                 break
 
