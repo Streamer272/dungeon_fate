@@ -24,6 +24,7 @@ class Bullet:
         self.bullet = self.canvas.create_image(self.x, self.y, anchor=N, image=self.bullet_file)
 
     def move(self) -> None:
+        # just fucking ton of math
         x1 = self.end_x
         y1 = self.end_y
         x2 = self.player.x
@@ -35,24 +36,38 @@ class Bullet:
         ratio = c / y2
         x_ratio = self.start_y / c
         y_ratio = self.start_x / c
-        index = self.start_y
 
-        # #index must be going from self.player.y to 0 or other side
+        # # index must be going from self.player.y to 0 or other side
+        # # we will calculate everything with y
         # c_length = index * ratio
         # new_x = (self.start_y / c) * (index * ratio)
         # new_y = (self.start_x / b) * (index * ratio)
 
-        while 0 < self.x < 1920 and 0 < self.y < 1080:
-            pass
+        index = self.y
+        print("Starting while loop in move function")
+        print("self.x = " + str(self.x) + ", self.y = " + str(self.y))
+        while (0 < self.x < 1920) and (0 < self.y < 1080):
+            print("Next loop with " + str(self.x) + " as x and " + str(self.y) + " as y")
+            new_x = x_ratio * (index * ratio)
+            new_y = y_ratio * (index * ratio)
 
-        Thread(target=self.delete_bullet(), args=[self.start_y]).start()
+            Thread(target=self.move_image, args=[new_x, new_y, (self.start_y - new_y) / 100]).start()
 
-    def move_image(self, x: int, y: int, timeout: int) -> None:
+            self.y = floor(new_y)
+            self.x = floor(new_x)
+            index -= 1
+
+        print("Ending while loop in move function")
+        Thread(target=self.delete_bullet, args=[self.start_y / 100]).start()
+
+    def move_image(self, x: int, y: int, timeout: float) -> None:
         sleep(timeout)
+        print("Moving on " + str(x) + ":" + str(y))
         self.canvas.coords(self.bullet, x, y)
 
     def delete_bullet(self, timeout: int):
         sleep(timeout)
+        print("Deleting bullet")
         self.canvas.delete(self.bullet)
 
 
@@ -67,12 +82,9 @@ class Weapon:
 
     def shoot_bullet(self) -> None:
         print("Shooting bullet...")
-        bullet = Bullet(self.player, 200, 900)
-        bullet.move()
-
-        print("While loop ended")
-
-        self.canvas.delete(bullet.bullet)
+        bullet = Bullet(self.player, 500, 50)
+        Thread(target=bullet.move()).start()
+        print("Bullet move ended")
 
 
 if __name__ == '__main__':

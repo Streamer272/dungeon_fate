@@ -1,7 +1,6 @@
 Fixes:
     fix bullets disappearing
     fix bullets trajectory
-    fix player movement
     fix die animation
 
 Features:

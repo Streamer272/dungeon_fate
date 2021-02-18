@@ -8,11 +8,11 @@ from Player import *
 
 
 class Dash:
-    def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 5, dash_damage: int = 50):
+    def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 10, dash_damage: int = 50):
         self.canvas = player.canvas
         self.player = player
 
-        self.player.movement += 10
+        self.player.movement *= 1.25
         self.dash_distance = dash_distance
         self.dash_recharge_time = dash_recharge_time
         self.dash_damage = dash_damage

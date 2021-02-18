@@ -64,8 +64,8 @@ class Gui:
         self.operator_label.place_forget()
         self.operator_option_menu.place_forget()
 
-        # Thread(target=self.start_mission).start()
-        Thread(target=self.start_dev_test).start()
+        Thread(target=self.start_mission).start()
+        # Thread(target=self.start_dev_test).start()
 
     def exit_game(self):
         self.win.destroy()
@@ -93,9 +93,10 @@ class Gui:
         # enemy.x = 1920/2
         # enemy.y = 1080/2
         # self.player.enemies.append(enemy)
-        self.pistol = Weapon(self.player, "Pistol1")
-        sleep(1)
-        Thread(target=self.run_bullet_test()).start()
+
+        # self.pistol = Weapon(self.player, "Pistol1")
+        # sleep(1)
+        # Thread(target=self.run_bullet_test).start()
 
     def run_bullet_test(self):
         print("Running bullet test")

@@ -1,6 +1,8 @@
 from tkinter import *
 from threading import Thread
 from time import sleep
+from pynput.keyboard import Key, Listener
+from keyboard import is_pressed
 
 from Player.Weapons.Knife import *
 from Player.Weapons.Weapon import *
@@ -16,6 +18,9 @@ class Player:
         self.health = health
         self.invisible = False
         self.dont_take_damage_protocol = False
+
+        self.is_moving = False
+        self.max_steps_per_second = 25
         self.movement = movement
         self.x = x
         self.y = y
@@ -47,6 +52,10 @@ class Player:
                                                text="Health: " + str(self.health))
 
     def move(self, direction: int, steps: int) -> None:
+        if self.is_moving:
+            return None
+        self.is_moving = True
+
         x = 0
         y = 0
 
@@ -80,6 +89,12 @@ class Player:
             self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
+
+        Thread(target=self.after_move).start()
+
+    def after_move(self):
+        sleep(1 / self.max_steps_per_second)
+        self.is_moving = False
 
     def start_die_animation(self) -> None:
         while self.is_game_paused:
@@ -142,27 +157,42 @@ class PlayerListener:
         self.player = player
         self.canvas = canvas
 
-    def on_press(self, event: any) -> None:
+    def on_press(self, key: str) -> None:
         if self.player.is_game_paused:
             return None
 
-        key = str(event.char).lower()
-
         if key == "w":
-            self.player.move(UP, self.player.movement)
+            Thread(target=self.player.move, args=[UP, self.player.movement]).start()
         elif key == "d":
-            self.player.move(RIGHT, self.player.movement)
+            Thread(target=self.player.move, args=[RIGHT, self.player.movement]).start()
         elif key == "s":
-            self.player.move(DOWN, self.player.movement)
+            Thread(target=self.player.move, args=[DOWN, self.player.movement]).start()
         elif key == "a":
-            self.player.move(LEFT, self.player.movement)
+            Thread(target=self.player.move, args=[LEFT, self.player.movement]).start()
         elif key == "e":
-            self.player.knife.attack_with_knife()
+            Thread(target=self.player.knife.attack_with_knife, args=[]).start()
         elif key == "f":
-            self.player.operator.use()
+            Thread(target=self.player.operator.use, args=[]).start()
 
     def join(self) -> None:
-        self.canvas.bind_all("<Key>", self.on_press)
+        while True:
+            while self.player.is_game_paused:
+                sleep(1)
+
+            if is_pressed("w"):
+                self.on_press("w")
+            elif is_pressed("d"):
+                self.on_press("d")
+            elif is_pressed("s"):
+                self.on_press("s")
+            elif is_pressed("a"):
+                self.on_press("a")
+            if is_pressed("e"):
+                self.on_press("e")
+            if is_pressed("f"):
+                self.on_press("f")
+
+            sleep(1 / self.player.max_steps_per_second)
 
 
 if __name__ == '__main__':

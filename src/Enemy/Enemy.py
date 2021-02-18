@@ -1,4 +1,7 @@
 from random import randint, choice
+from math import floor
+from tkinter import *
+from threading import Thread
 
 from Player.Player import *
 
@@ -33,8 +36,8 @@ class Enemy:
         y_possible = [[self.player.y - 500, self.player.y - 250], [self.player.y + 250, self.player.y + 500]]
         x_choice = choice(x_possible)
         y_choice = choice(y_possible)
-        x = randint(x_choice[0], x_choice[1])
-        y = randint(y_choice[0], y_choice[1])
+        x = randint(floor(x_choice[0]), floor(x_choice[1]))
+        y = randint(floor(y_choice[0]), floor(y_choice[1]))
 
         if x < 0 or y < 0 or x > 1920 or y > 1080:
             x, y = self.generate_spawn_position()
