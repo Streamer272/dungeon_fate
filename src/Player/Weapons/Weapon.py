@@ -10,7 +10,8 @@ from Player.Player import *
 class Bullet:
     def __init__(self, player, x_destination: int, y_destination: int) -> None:
         self.player = player
-        self.canvas = self.player.canvas
+        self.canvas: Canvas = self.player.canvas
+        self.resource_pack = self.player.resource_pack
 
         self.start_x = self.player.x
         self.start_y = self.player.y
@@ -19,19 +20,40 @@ class Bullet:
         self.end_x = x_destination
         self.end_y = y_destination
 
-        self.bullet_file = PhotoImage(file="img/bullet.png")
+        self.bullet_file = PhotoImage(file="resource-packs/" + self.resource_pack + "/weapons/bullet.png")
         self.bullet = self.canvas.create_image(self.x, self.y, anchor=N, image=self.bullet_file)
 
-    def move(self):
+    def move(self) -> None:
         x1 = self.end_x
         y1 = self.end_y
         x2 = self.player.x
         y2 = self.player.y
         c2 = sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
         c1 = sqrt((y1 ** 2) + ((x1 * (y2 / y1)) ** 2))
-        ratio = (c1 + c2) / y2
+        c = c1 + c2
+
+        ratio = c / y2
+        x_ratio = self.start_y / c
+        y_ratio = self.start_x / c
+        index = self.start_y
+
+        # #index must be going from self.player.y to 0 or other side
+        # c_length = index * ratio
+        # new_x = (self.start_y / c) * (index * ratio)
+        # new_y = (self.start_x / b) * (index * ratio)
+
         while 0 < self.x < 1920 and 0 < self.y < 1080:
             pass
+
+        Thread(target=self.delete_bullet(), args=[self.start_y]).start()
+
+    def move_image(self, x: int, y: int, timeout: int) -> None:
+        sleep(timeout)
+        self.canvas.coords(self.bullet, x, y)
+
+    def delete_bullet(self, timeout: int):
+        sleep(timeout)
+        self.canvas.delete(self.bullet)
 
 
 class Weapon:

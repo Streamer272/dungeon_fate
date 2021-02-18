@@ -1,10 +1,10 @@
 from json import loads
-from tkinter import StringVar, OptionMenu, Button, Label
 from typing import List
-from tkinter import *
 from os import listdir
 
 from Enemy.Enemy import *
+from Player.Player import *
+from src.Player.Weapons.Weapon import *
 
 
 class Gui:
@@ -63,8 +63,9 @@ class Gui:
         self.resource_pack_option_menu.place_forget()
         self.operator_label.place_forget()
         self.operator_option_menu.place_forget()
-        Thread(target=self.start_mission).start()
-        # Thread(target=self.start_dev_test).start()
+
+        # Thread(target=self.start_mission).start()
+        Thread(target=self.start_dev_test).start()
 
     def exit_game(self):
         self.win.destroy()

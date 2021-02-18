@@ -59,8 +59,9 @@ class Ghost:
         self.canvas.itemconfig(self.ghost_recharge_label, text="Ghost: READY")
 
     def use_passive(self):
-        if self.is_passive_recharging:
+        if self.is_passive_recharging or self.player.invisible:
             return None
+
         self.canvas.itemconfig(self.passive_recharge_label, text="Passive: Using")
 
         self.player.invisible = True

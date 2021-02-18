@@ -2,8 +2,8 @@ from tkinter import *
 from threading import Thread
 from time import sleep
 
-from Player.Knife import *
-from Player.Weapon import *
+from Player.Weapons.Knife import *
+from Player.Weapons.Weapon import *
 from Global_Functions import *
 
 from Player.Operators.Ninja.Dash import *
@@ -27,7 +27,7 @@ class Player:
         self.sprite_file = PhotoImage(file=self.current_image_file)
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
-        self.knife = Knife.Knife(self, 25, 1)
+        self.knife = Knife(self, 25, 1)
 
         self.operator = operator
         if self.operator == "Ninja":
