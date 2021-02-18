@@ -10,6 +10,7 @@ from Global_Functions import *
 
 from Player.Operators.Ninja.Dash import *
 from Player.Operators.Ghost.Ghost import *
+from Player.Operators.Wizard.Wizard import *
 
 
 class Player:
@@ -39,6 +40,8 @@ class Player:
             self.operator = Dash(self, 250, 5)
         elif self.operator == "Ghost":
             self.operator = Ghost(self, 3, 10)
+        elif self.operator == "Wizard":
+            self.operator = Wizard(self, 30, 10)
         else:
             self.operator = Dash(self, 250, 5)
 

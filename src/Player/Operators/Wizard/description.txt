@@ -1,0 +1,4 @@
+Passive ability:
+    heals for 5 health when kills enemy
+Active ability:
+    player can teleport wherever on map

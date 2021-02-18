@@ -25,11 +25,9 @@ class Ghost:
                                                               text="Passive: READY")
 
     def use(self) -> None:
-        print("Using dash -- starting thread")
         Thread(target=self.use_ghost).start()
 
     def use_ghost(self):
-        print("Got to use_ghost")
         if self.is_ghost_recharging:
             return None
         self.canvas.itemconfig(self.ghost_recharge_label, text="Ghost: Using")
