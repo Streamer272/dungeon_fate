@@ -5,8 +5,11 @@ Fixes:
     fix enemies on wave 3
 
 Features:
-    add more operators (throwing knives)
+    add more operators (throwing knives, freeze time)
     add more options to game menu
     add weapons
     add back-to-menu option
     add multiplayer / singleplayer option
+    add name to this project
+    add campaign / practise choice
+    add name to game
