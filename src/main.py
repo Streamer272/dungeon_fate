@@ -32,13 +32,13 @@ class Gui:
         self.exit_button = Button(self.win, text="Exit", font=("Normal", 15, "normal"), command=self.exit_game)
         self.exit_button.place(x=15, y=15)
 
-        self.create_menu()
+        self.create_singleplayer_menu()
 
         self.win.focus_force()
         self.win.mainloop()
 
-    def create_menu(self):
-        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"), command=self.start_game)
+    def create_singleplayer_menu(self):
+        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"), command=self.start_singleplayer_game)
         self.start_button.place(x=1920 / 2 - 45, y=1080 / 2 + 150)
 
         self.resource_pack_label = Label(self.win, text="Resource pack: ")
@@ -57,7 +57,7 @@ class Gui:
         self.operator_option_menu = OptionMenu(self.win, self.operator, *classes_options)
         self.operator_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 50)
 
-    def start_game(self):
+    def start_singleplayer_game(self):
         self.start_button.place_forget()
         self.resource_pack_label.place_forget()
         self.resource_pack_option_menu.place_forget()
@@ -80,12 +80,6 @@ class Gui:
 
         return dead_enemies == len(enemies)
 
-    def on_player_dead(self) -> None:
-        say(self.canvas, text="You lost!", timeout=10)
-        self.player.is_game_paused = True
-        sleep(10)
-        exit()
-
     def start_dev_test(self) -> None:
         self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)
         # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
@@ -94,13 +88,19 @@ class Gui:
         # enemy.y = 1080/2
         # self.player.enemies.append(enemy)
 
-        # self.pistol = Weapon(self.player, "Pistol1")
-        # sleep(1)
-        # Thread(target=self.run_bullet_test).start()
+        self.pistol = Weapon(self.player, "Pistol1")
+        sleep(1)
+        Thread(target=self.run_bullet_test).start()
 
     def run_bullet_test(self):
         print("Running bullet test")
         self.pistol.shoot_bullet()
+
+    def on_player_dead(self) -> None:
+        say(self.canvas, text="You lost!", timeout=10)
+        self.player.is_game_paused = True
+        sleep(10)
+        exit()
 
     def start_mission(self) -> None:
         self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)

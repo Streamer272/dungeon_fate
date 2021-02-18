@@ -1,7 +1,6 @@
 from tkinter import *
 from threading import Thread
 from time import sleep
-from pynput.keyboard import Key, Listener
 from external_libraries.keyboard import is_pressed
 
 from Player.Weapons.Knife import *
