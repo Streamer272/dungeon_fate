@@ -4,7 +4,7 @@ from os import listdir
 
 from Enemy.Enemy import *
 from Player.Player import *
-from src.Player.Weapons.Weapon import *
+from Player.Weapons.Weapon import *
 
 
 class Gui:

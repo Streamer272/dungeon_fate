@@ -2,6 +2,7 @@ Fixes:
     fix bullets disappearing
     fix bullets trajectory
     fix die animation
+    fix enemies on wave 3
 
 Features:
     add more operators (throwing knives, teleport)
