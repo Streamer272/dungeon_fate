@@ -89,7 +89,7 @@ class Gui:
         # Thread(target=self.start_dev_test).start()
 
     def start_practise(self) -> None:
-        self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)
+        self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
 
         def are_all_enemies_dead(enemies_: List[Enemy]) -> bool:
             dead_enemies = 0
@@ -131,7 +131,7 @@ class Gui:
         sleep(10)
 
     def start_dev_test(self) -> None:
-        self.player = Player(self.canvas, self.resource_pack.get(), self.operator.get(), health=100)
+        self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
 
         # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
         # enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)

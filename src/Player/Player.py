@@ -13,7 +13,8 @@ from Player.Operators.Wizard.Wizard import *
 
 
 class Player:
-    def __init__(self, canvas: Canvas, resource_pack_name: str, operator: str, health: int = 100, x: int = 1920 / 2, y: int = 1080 / 2, movement: int = 10) -> None:
+    def __init__(self, gui, resource_pack_name: str, operator: str, health: int = 100, x: int = 1920 / 2,
+                 y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
         self.invisible = False
@@ -25,10 +26,12 @@ class Player:
         self.x = x
         self.y = y
 
-        self.canvas = canvas
+        self.gui = gui
+        self.canvas = self.gui.canvas
         self.resource_pack = resource_pack_name
         self.dont_change_image_protocol = False
-        self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+        self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
+            self.direction) + ".png"
         self.sprite_file = PhotoImage(file=self.current_image_file)
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
@@ -50,8 +53,8 @@ class Player:
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
 
-        self.health_label = canvas.create_text(1840, 20, font="Normal 20 normal normal",
-                                               text="Health: " + str(self.health))
+        self.health_label = self.canvas.create_text(1840, 20, font="Normal 20 normal normal",
+                                                    text="Health: " + str(self.health))
 
     def pause_game(self):
         print("Pausing game")
@@ -64,39 +67,45 @@ class Player:
     def move(self, direction: int, steps: int) -> None:
         if self.is_moving:
             return None
-        self.is_moving = True
 
         x = 0
         y = 0
 
         if direction == UP:
-            if self.y - steps <= 0:
+            if self.y - steps - 1 <= 0:
+                print("Direction is up and its < 0")
                 return None
 
             y -= steps
         elif direction == RIGHT:
-            if self.x + steps >= 1900:
+            if self.x + steps + 1 >= 1900:
+                print("Direction is right and its > 1900")
                 return None
 
             x += steps
         elif direction == DOWN:
-            if self.y + steps >= 1030:
+            if self.y + steps + 1 >= 1030:
+                print("Direction is down and its > 1030")
                 return None
 
             y += steps
         elif direction == LEFT:
-            if self.x - steps <= 20:
+            if self.x - steps - 1 <= 20:
+                print("Direction is left and its < 20")
                 return None
 
             x -= steps
 
+        self.is_moving = True
         self.x += x
         self.y += y
 
         self.direction = direction
         self.canvas.move(self.sprite, x, y)
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
+                self.direction) + ".png" and not self.dont_change_image_protocol:
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
+                self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
@@ -141,9 +150,11 @@ class Player:
 
         self.operator.on_take_damage()
 
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(
+                self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(self.direction) + ".png"
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(
+                self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         Thread(target=self.set_image_to_default).start()
@@ -153,9 +164,11 @@ class Player:
             sleep(1)
 
         sleep(0.2)
-        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png":
+        if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
+                self.direction) + ".png":
             self.dont_change_image_protocol = False
-            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(self.direction) + ".png"
+            self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
+                self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         if self.health == 0:
@@ -172,12 +185,16 @@ class PlayerListener:
             return None
 
         if key == "w":
+            print("Moving up")
             Thread(target=self.player.move, args=[UP, self.player.movement]).start()
         elif key == "d":
+            print("Moving left")
             Thread(target=self.player.move, args=[RIGHT, self.player.movement]).start()
         elif key == "s":
+            print("Moving down")
             Thread(target=self.player.move, args=[DOWN, self.player.movement]).start()
         elif key == "a":
+            print("Moving right")
             Thread(target=self.player.move, args=[LEFT, self.player.movement]).start()
         elif key == "e":
             Thread(target=self.player.knife.attack_with_knife, args=[]).start()

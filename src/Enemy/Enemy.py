@@ -68,9 +68,11 @@ class Enemy:
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
+
         if self.health <= 0:
             self.die()
             return None
+
         Thread(target=self.set_image_to_default).start()
 
     def set_image_to_default(self) -> None:
