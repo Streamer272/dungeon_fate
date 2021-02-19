@@ -6,6 +6,8 @@ Fixes:
     fix enemies still spawning after death (wave 4)
     fix pause and resume game
     fix enemies spinning on horizontal follow
+    fix mouse clicking speed
+    fix mouse shoot_bullet needs arguments when provided
 
 Features:
     add more operators (throwing knives, freeze time)

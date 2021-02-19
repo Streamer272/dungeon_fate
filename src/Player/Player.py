@@ -1,7 +1,7 @@
 from tkinter import *
 from threading import Thread
 from time import sleep
-from external_libraries.keyboard import is_pressed
+from external_libraries import keyboard
 
 from Player.Weapons.Knife import *
 from Player.Weapons.Weapon import *
@@ -51,6 +51,7 @@ class Player:
 
         self.enemies = []
         self.is_game_paused = False
+        self.pistol = Weapon(self, weapon_damage=10, weapon_fire_rate=2)
 
         listener = PlayerListener(self, self.canvas)
         Thread(target=listener.join).start()
@@ -81,25 +82,21 @@ class Player:
 
         if direction == UP:
             if self.y - steps - 1 <= 0:
-                print("Direction is up and its < 0")
                 return None
 
             y -= steps
         elif direction == RIGHT:
-            if self.x + steps + 1 >= 1900:
-                print("Direction is right and its > 1900")
+            if self.x + steps + 1 >= 1890:
                 return None
 
             x += steps
         elif direction == DOWN:
             if self.y + steps + 1 >= 1030:
-                print("Direction is down and its > 1030")
                 return None
 
             y += steps
         elif direction == LEFT:
-            if self.x - steps - 1 <= 20:
-                print("Direction is left and its < 20")
+            if self.x - steps - 1 <= 30:
                 return None
 
             x -= steps
@@ -223,24 +220,32 @@ class PlayerListener:
         sleep(0.5)
         self.is_toggle_pause_running = False
 
+    def shoot_bullet(self, event) -> None:
+        try:
+            Thread(target=self.player.pistol.shoot_bullet, args=[event.x, event.y]).start()
+        except TypeError:
+            pass
+
     def join(self) -> None:
+        self.canvas.bind_all("<Button-1>", self.shoot_bullet)
+
         while True:
             while self.player.is_game_paused:
                 sleep(1)
 
-            if is_pressed("w"):
+            if keyboard.is_pressed("w"):
                 Thread(target=self.on_press, args=["w"]).start()
-            elif is_pressed("d"):
+            elif keyboard.is_pressed("d"):
                 Thread(target=self.on_press, args=["d"]).start()
-            elif is_pressed("s"):
+            elif keyboard.is_pressed("s"):
                 Thread(target=self.on_press, args=["s"]).start()
-            elif is_pressed("a"):
+            elif keyboard.is_pressed("a"):
                 Thread(target=self.on_press, args=["a"]).start()
-            if is_pressed("e"):
+            if keyboard.is_pressed("e"):
                 Thread(target=self.on_press, args=["e"]).start()
-            if is_pressed("f"):
+            if keyboard.is_pressed("f"):
                 Thread(target=self.on_press, args=["f"]).start()
-            if is_pressed("esc"):
+            if keyboard.is_pressed("esc"):
                 Thread(target=self.toggle_pause).start()
 
             sleep(1 / self.player.max_steps_per_second)

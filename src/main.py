@@ -88,8 +88,8 @@ class Gui:
     def start_practise_game(self):
         self.delete_menu()
 
-        Thread(target=self.start_practise).start()
-        # Thread(target=self.start_dev_test).start()
+        # Thread(target=self.start_practise).start()
+        Thread(target=self.start_dev_test).start()
 
     def start_practise(self) -> None:
         self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
@@ -148,7 +148,7 @@ class Gui:
         # enemy.y = 1080/2
         # self.player.enemies.append(enemy)
 
-        self.pistol = Weapon(self.player, "Pistol1")
+        self.pistol = Weapon(self.player)
         sleep(1)
         Thread(target=self.pistol.shoot_bullet).start()
 
@@ -160,7 +160,7 @@ class Gui:
 
 
 if __name__ == "__main__":
-    # gui = Gui()
-    # gui.start_gui()
-    l = AccountController()
-    l.ask_login()
+    gui = Gui()
+    gui.start_gui()
+    # l = AccountController()
+    # l.ask_login()
