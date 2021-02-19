@@ -1,5 +1,24 @@
 [
-
+  {
+    "name": "First wave",
+    "enemy-count": 10,
+    "spawn-timeout": 3,
+    "enemy": {
+      "health": 50,
+      "damage": 10,
+      "attack-speed": 0.5
+    }
+  },
+  {
+    "name": "Second wave",
+    "enemy-count": 15,
+    "spawn-timeout": 3,
+    "enemy": {
+      "health": 50,
+      "damage": 10,
+      "attack-speed": 0.5
+    }
+  },
   {
     "name": "Third wave",
     "enemy-count": 15,

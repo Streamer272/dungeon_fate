@@ -3,6 +3,9 @@ from tkinter import Label, StringVar, OptionMenu
 from typing import List
 from os import listdir
 
+from Global_Functions import *
+from Account_Controller import *
+
 from Enemy.Enemy import *
 from Player.Player import *
 from Player.Weapons.Weapon import *
@@ -99,18 +102,24 @@ class Gui:
 
             return dead_enemies == len(enemies_)
 
-        waves = loads(open("Levels/practise.json", "r").read())
+        waves = loads(open("Data/Levels/practise.json", "r").read())
         for wave in waves:
             enemies = []
             self.player.enemies = []
 
             for i in range(3):
-                say(self.canvas, text=wave["name"] + " is coming in " + str(3 - i) + "...", timeout=1)
+                say(self.player, self.canvas, text=wave["name"] + " is coming in " + str(3 - i) + "...", timeout=1)
                 sleep(1)
+
+                while self.player.is_game_paused:
+                    sleep(1)
 
             for i in range(wave["enemy-count"]):
                 if self.player.health == 0:
                     self.on_player_dead()
+
+                while self.player.is_game_paused:
+                    sleep(1)
 
                 enemy = Enemy(self.player, wave["enemy"]["health"], wave["enemy"]["damage"], wave["enemy"]["attack-speed"])
                 self.player.enemies.append(enemy)
@@ -151,5 +160,7 @@ class Gui:
 
 
 if __name__ == "__main__":
-    gui = Gui()
-    gui.start_gui()
+    # gui = Gui()
+    # gui.start_gui()
+    l = AccountController()
+    l.ask_login()

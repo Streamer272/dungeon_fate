@@ -13,6 +13,8 @@ from Player.Operators.Wizard.Wizard import *
 
 
 class Player:
+    resume: object
+
     def __init__(self, gui, resource_pack_name: str, operator: str, health: int = 100, x: int = 1920 / 2,
                  y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
@@ -56,13 +58,19 @@ class Player:
         self.health_label = self.canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                     text="Health: " + str(self.health))
 
-    def pause_game(self):
+    def pause_game(self) -> None:
         print("Pausing game")
         self.is_game_paused = True
+        resume_file = PhotoImage("resource-packs/" + self.resource_pack + "/resume.png")
+        self.resume = self.canvas.create_image(1920 / 2 - 200, 1080 / 2 - 200, anchor=N, image=resume_file)
 
-    def resume_game(self):
+    def resume_game(self) -> None:
         print("Resuming game")
         self.is_game_paused = False
+        try:
+            self.canvas.delete(self.resume)
+        except NameError:
+            pass
 
     def move(self, direction: int, steps: int) -> None:
         if self.is_moving:
@@ -180,51 +188,60 @@ class PlayerListener:
         self.player = player
         self.canvas = canvas
 
+        self.is_toggle_pause_running = False
+
     def on_press(self, key: str) -> None:
         if self.player.is_game_paused:
             return None
 
         if key == "w":
-            print("Moving up")
             Thread(target=self.player.move, args=[UP, self.player.movement]).start()
         elif key == "d":
-            print("Moving left")
             Thread(target=self.player.move, args=[RIGHT, self.player.movement]).start()
         elif key == "s":
-            print("Moving down")
             Thread(target=self.player.move, args=[DOWN, self.player.movement]).start()
         elif key == "a":
-            print("Moving right")
             Thread(target=self.player.move, args=[LEFT, self.player.movement]).start()
         elif key == "e":
             Thread(target=self.player.knife.attack_with_knife, args=[]).start()
         elif key == "f":
             Thread(target=self.player.operator.use, args=[]).start()
 
-    def toggle_pause(self, event):
+    def toggle_pause(self) -> None:
+        if self.is_toggle_pause_running:
+            return None
+
         if self.player.is_game_paused:
-            self.player.resume_game()
+            Thread(target=self.player.resume_game()).start()
         else:
-            self.player.pause_game()
+            Thread(target=self.player.pause_game()).start()
+
+        self.is_toggle_pause_running = True
+        Thread(self.after_toggle_pause).start()
+
+    def after_toggle_pause(self) -> None:
+        sleep(0.5)
+        self.is_toggle_pause_running = False
 
     def join(self) -> None:
-        self.canvas.bind_all("<Escape>", self.toggle_pause)
         while True:
             while self.player.is_game_paused:
                 sleep(1)
 
             if is_pressed("w"):
-                self.on_press("w")
+                Thread(target=self.on_press, args=["w"]).start()
             elif is_pressed("d"):
-                self.on_press("d")
+                Thread(target=self.on_press, args=["d"]).start()
             elif is_pressed("s"):
-                self.on_press("s")
+                Thread(target=self.on_press, args=["s"]).start()
             elif is_pressed("a"):
-                self.on_press("a")
+                Thread(target=self.on_press, args=["a"]).start()
             if is_pressed("e"):
-                self.on_press("e")
+                Thread(target=self.on_press, args=["e"]).start()
             if is_pressed("f"):
-                self.on_press("f")
+                Thread(target=self.on_press, args=["f"]).start()
+            if is_pressed("esc"):
+                Thread(target=self.toggle_pause).start()
 
             sleep(1 / self.player.max_steps_per_second)
 
