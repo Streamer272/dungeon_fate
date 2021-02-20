@@ -130,19 +130,19 @@ class TestMouse(unittest.TestCase):
         self.assertEqual(mouse.get_position(), mouse._os_mouse.get_position())
 
     def test_move(self):
-        mouse.move(0, 0)
+        mouse.shoot(0, 0)
         self.assertEqual(mouse._os_mouse.get_position(), (0, 0))
-        mouse.move(100, 500)
+        mouse.shoot(100, 500)
         self.assertEqual(mouse._os_mouse.get_position(), (100, 500))
-        mouse.move(1, 2, False)
+        mouse.shoot(1, 2, False)
         self.assertEqual(mouse._os_mouse.get_position(), (101, 502))
 
-        mouse.move(0, 0)
-        mouse.move(100, 499, True, duration=0.01)
+        mouse.shoot(0, 0)
+        mouse.shoot(100, 499, True, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (100, 499))
-        mouse.move(100, 1, False, duration=0.01)
+        mouse.shoot(100, 1, False, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (200, 500))
-        mouse.move(0, 0, False, duration=0.01)
+        mouse.shoot(0, 0, False, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (200, 500))
 
     def triggers(self, fn, events, **kwargs):

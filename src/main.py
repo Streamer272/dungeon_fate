@@ -88,8 +88,8 @@ class Gui:
     def start_practise_game(self):
         self.delete_menu()
 
-        # Thread(target=self.start_practise).start()
-        Thread(target=self.start_dev_test).start()
+        Thread(target=self.start_practise).start()
+        # Thread(target=self.start_dev_test).start()
 
     def start_practise(self) -> None:
         self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)

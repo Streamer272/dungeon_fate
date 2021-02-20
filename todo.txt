@@ -1,6 +1,4 @@
 Fixes:
-    fix bullets disappearing
-    fix bullets trajectory
     fix die animation
     fix enemies on wave 3
     fix enemies still spawning after death (wave 4)
@@ -8,12 +6,17 @@ Fixes:
     fix enemies spinning on horizontal follow
     fix mouse clicking speed
     fix mouse shoot_bullet needs arguments when provided
+    fix bullet damaging
+    fix enemies die animation
+    fix bullet deals multiplied damage
 
 Features:
     add more operators (throwing knives, freeze time)
     add more options to game menu
     add weapons (8 directional shooting)
     add enemies 8 directional images
+    add player 8 directional movement and knifing
     add back-to-menu option
     add accounts
     add multiplayer
+    add health bars for enemies

@@ -17,10 +17,12 @@ LEFT_UP_ = 7
 
 
 class Bullet:
-    def __init__(self, player, x_destination: int, y_destination: int) -> None:
+    def __init__(self, player, weapon, x_destination: int, y_destination: int) -> None:
         self.player = player
+        self.weapon = weapon
         self.canvas: Canvas = self.player.canvas
         self.resource_pack = self.player.resource_pack
+        self.destroy_bullet_protocol = False
 
         self.start_x = self.player.x
         self.start_y = self.player.y
@@ -56,7 +58,29 @@ class Bullet:
             self.move_by_x = 2
             self.move_by_y = 2
 
-    def move(self) -> None:
+    def damage_enemy(self, x: int, y: int, timeout: float) -> None:
+        if self.destroy_bullet_protocol:
+            return None
+
+        for enemy in self.player.enemies:
+            if self.destroy_bullet_protocol:
+                return None
+
+            print("Checking collision with enemy " + str(enemy.x) + ":" + str(enemy.y) + " and bullet " + str(x) + ":" + str(y))
+
+            if enemy.x - 25 < x < enemy.x + 25 and enemy.y - 25 < y < enemy.y + 25 and not enemy.health <= 0:
+                Thread(target=self.do_damage, args=[enemy, timeout]).start()
+
+    def do_damage(self, enemy, timeout: float):
+        print("Collision approved, deleting bullet")
+
+        Thread(target=self.delete_bullet, args=[timeout]).start()
+
+        sleep(timeout)
+        self.destroy_bullet_protocol = True
+        enemy.take_damage(self.weapon.damage)
+
+    def shoot(self) -> None:
         if self.destination_x == self.start_x and self.destination_y == self.start_y:
             return None
 
@@ -64,19 +88,34 @@ class Bullet:
 
         to_sleep = 0.005
         while 0 < self.y < 1030 and 30 < self.x < 1890:
+            if self.destroy_bullet_protocol:
+                return None
+
             self.y += self.move_by_y
             self.x += self.move_by_x
             Thread(target=self.move_image, args=[self.x, self.y, to_sleep]).start()
+
             to_sleep += 0.005
 
         Thread(target=self.delete_bullet, args=[to_sleep]).start()
 
     def move_image(self, x: int, y: int, timeout: float) -> None:
+        Thread(target=self.damage_enemy, args=[x, y, timeout]).start()
+
         sleep(timeout)
+
+        if self.destroy_bullet_protocol:
+            return None
+
         self.canvas.coords(self.bullet, x, y)
 
-    def delete_bullet(self, timeout: int):
+    def delete_bullet(self, timeout: float) -> None:
         sleep(timeout)
+
+        if self.destroy_bullet_protocol:
+            return None
+
+        self.destroy_bullet_protocol = True
         self.canvas.delete(self.bullet)
 
 
@@ -89,12 +128,15 @@ class Weapon:
         self.fire_rate = weapon_fire_rate
         self.is_shooting_bullet = False
 
-    def shoot_bullet(self, x, y) -> None:
+    def shoot_bullet(self, x: int = -404, y: int = -404) -> None:
         if self.is_shooting_bullet:
             return None
 
-        bullet = Bullet(self.player, x, y)
-        Thread(target=bullet.move).start()
+        if x == -404 or y == -404:
+            return None
+
+        bullet = Bullet(self.player, self, x, y)
+        Thread(target=bullet.shoot).start()
 
         self.is_shooting_bullet = True
         Thread(target=self.after_shoot_bullet).start()

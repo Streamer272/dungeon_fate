@@ -32,6 +32,7 @@ class Player:
         self.canvas = self.gui.canvas
         self.resource_pack = resource_pack_name
         self.dont_change_image_protocol = False
+
         self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
             self.direction) + ".png"
         self.sprite_file = PhotoImage(file=self.current_image_file)

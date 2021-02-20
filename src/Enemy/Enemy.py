@@ -63,6 +63,7 @@ class Enemy:
 
     def take_damage(self, damage: int) -> None:
         self.health -= damage
+
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png"
