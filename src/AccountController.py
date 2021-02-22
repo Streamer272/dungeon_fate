@@ -39,17 +39,15 @@ class AccountController:
 
     @staticmethod
     def write_data(username: str, password: str) -> None:
-        with loads(open("Data/User_Data/data.json", "w").read()) as data:
-            if data["username"] != username or data["password"] != password:
-                with open("Data/User_Data/data.json", "w") as file:
-                    file.write(dumps({
-                        "logged_in": True,
-                        "data": {
-                            "username": username,
-                            "password": password,
-                        }
-                    }))
-                    file.close()
+        with open("Data/User_Data/data.json", "w") as file:
+            file.write(dumps({
+                "logged_in": True,
+                "data": {
+                    "username": username,
+                    "password": password,
+                }
+            }))
+            file.close()
 
     def send_login_request(self, username: str, password: str) -> requests.request:
         data = {
@@ -169,6 +167,7 @@ class AccountController:
     def wait(self) -> None:
         while not self.logged_in and not self.is_server_offline:
             sleep(0.5)
+        sleep(1)
 
     def ask_for_login(self) -> bool:
         if self.is_user_logged_in():
