@@ -160,7 +160,7 @@ class Gui:
 
 
 if __name__ == "__main__":
-    gui = Gui()
-    gui.start_gui()
-    # l = AccountController()
-    # l.ask_login()
+    # gui = Gui()
+    # gui.start_gui()
+    l = AccountController()
+    l.ask_login()
