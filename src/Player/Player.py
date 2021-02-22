@@ -5,7 +5,7 @@ from external_libraries import keyboard
 
 from Player.Weapons.Knife import *
 from Player.Weapons.Weapon import *
-from Global_Functions import *
+from GlobalFunctions import *
 
 from Player.Operators.Ninja.Dash import *
 from Player.Operators.Ghost.Ghost import *

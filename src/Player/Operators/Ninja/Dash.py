@@ -3,7 +3,7 @@ from time import sleep
 from threading import Thread
 from math import floor
 
-from Global_Functions import *
+from GlobalFunctions import *
 from Player import *
 
 

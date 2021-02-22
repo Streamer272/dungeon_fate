@@ -1,6 +1,6 @@
 from tkinter import *
 
-from Global_Functions import *
+from GlobalFunctions import *
 from Player import *
 
 

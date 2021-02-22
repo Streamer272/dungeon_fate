@@ -3,8 +3,8 @@ from tkinter import Label, StringVar, OptionMenu
 from typing import List
 from os import listdir
 
-from Global_Functions import *
-from Account_Controller import *
+from GlobalFunctions import *
+from AccountController import *
 
 from Enemy.Enemy import *
 from Player.Player import *
@@ -163,4 +163,4 @@ if __name__ == "__main__":
     # gui = Gui()
     # gui.start_gui()
     l = AccountController()
-    l.ask_login()
+    l.ask_for_login()
