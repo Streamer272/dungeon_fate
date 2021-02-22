@@ -6,6 +6,7 @@ from external_libraries import keyboard
 from Player.Weapons.Knife import *
 from Player.Weapons.Weapon import *
 from GlobalFunctions import *
+from AccountController import *
 
 from Player.Operators.Ninja.Dash import *
 from Player.Operators.Ghost.Ghost import *

@@ -4,7 +4,6 @@ from typing import List
 from os import listdir
 
 from GlobalFunctions import *
-from AccountController import *
 
 from Enemy.Enemy import *
 from Player.Player import *
@@ -44,14 +43,15 @@ class Gui:
     def create_menu(self):
         self.exit_button = Button(self.win, text="Exit", font=("Normal", 15, "normal"), command=self.exit_game)
         self.exit_button.place(x=15, y=15)
-        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"), command=self.start_practise_game)
+        self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"),
+                                   command=self.start_practise_game)
         self.start_button.place(x=1920 / 2 - 45, y=1080 / 2 + 150)
 
         self.mode_label = Label(self.win, text="Game mode: ")
         self.mode_label.place(x=1920 / 2 - 100, y=1080 / 2 + 5)
         self.mode = StringVar(self.win)
         self.mode.set("Practise")
-        mode_options = ["Practise"]
+        mode_options = ["Practise", "Dev Test", "Multiplayer"]
         self.mode_menu = OptionMenu(self.win, self.mode, *mode_options)
         self.mode_menu.place(x=1920 / 2 - 20, y=1080 / 2)
 
@@ -88,8 +88,12 @@ class Gui:
     def start_practise_game(self):
         self.delete_menu()
 
-        Thread(target=self.start_practise).start()
-        # Thread(target=self.start_dev_test).start()
+        if self.mode.get() == "Practise":
+            Thread(target=self.start_practise).start()
+        elif self.mode.get() == "Dev Text":
+            Thread(target=self.start_dev_test).start()
+        elif self.mode.get() == "Multiplayer":
+            pass
 
     def start_practise(self) -> None:
         self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
@@ -121,7 +125,8 @@ class Gui:
                 while self.player.is_game_paused:
                     sleep(1)
 
-                enemy = Enemy(self.player, wave["enemy"]["health"], wave["enemy"]["damage"], wave["enemy"]["attack-speed"])
+                enemy = Enemy(self.player, wave["enemy"]["health"], wave["enemy"]["damage"],
+                              wave["enemy"]["attack-speed"])
                 self.player.enemies.append(enemy)
                 enemies.append(enemy)
                 Thread(target=enemy.auto_move).start()
@@ -160,7 +165,5 @@ class Gui:
 
 
 if __name__ == "__main__":
-    # gui = Gui()
-    # gui.start_gui()
-    l = AccountController()
-    l.ask_for_login()
+    gui = Gui()
+    gui.start_gui()
