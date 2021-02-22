@@ -134,7 +134,7 @@ from ._canonical_names import all_modifiers, sided_modifiers, normalize_name
 _modifier_scan_codes = set()
 def is_modifier(key):
     """
-    Returns True if `key` is a scan code or name of a modifier key.
+    Returns True if `key` is a scan code or username of a modifier key.
     """
     if _is_str(key):
         return key in all_modifiers
@@ -297,7 +297,7 @@ _listener = _KeyboardListener()
 
 def key_to_scan_codes(key, error_if_missing=True):
     """
-    Returns a list of scan codes associated with this key (name or scan code).
+    Returns a list of scan codes associated with this key (username or scan code).
     """
     if _is_number(key):
         return (key,)
@@ -444,8 +444,8 @@ def hook(callback, suppress=False, on_remove=lambda: None):
     The event passed to the callback is of type `keyboard.KeyboardEvent`,
     with the following attributes:
 
-    - `name`: an Unicode representation of the character (e.g. "&") or
-    description (e.g.  "space"). The name is always lower-case.
+    - `username`: an Unicode representation of the character (e.g. "&") or
+    description (e.g.  "space"). The username is always lower-case.
     - `scan_code`: number representing the physical key, e.g. 55.
     - `time`: timestamp of the time the event occurred, with as much precision
     as given by the OS.
@@ -892,7 +892,7 @@ def get_hotkey_name(names=None):
 
     - normalizes names;
     - removes "left" and "right" prefixes;
-    - replaces the "+" key name with "plus" to avoid ambiguity;
+    - replaces the "+" key username with "plus" to avoid ambiguity;
     - puts modifier keys first, in a standardized order;
     - sort remaining keys;
     - finally, joins everything with "+".
@@ -929,7 +929,7 @@ def read_event(suppress=False):
 
 def read_key(suppress=False):
     """
-    Blocks until a keyboard event happens, then returns that event's name or,
+    Blocks until a keyboard event happens, then returns that event's username or,
     if missing, its scan code.
     """
     event = read_event(suppress)
@@ -982,7 +982,7 @@ def get_typed_strings(events, allow_backspace=True):
     for event in events:
         name = event.name
 
-        # Space is the only key that we _parse_hotkey to the spelled out name
+        # Space is the only key that we _parse_hotkey to the spelled out username
         # because of legibility. Now we have to undo that.
         if event.name == 'space':
             name = ' '

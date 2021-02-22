@@ -422,7 +422,7 @@ def map_name(name):
     yield key_controller.map_char(name)
 
 def name_from_scancode(scan_code):
-    """ Returns the name or character associated with the specified key code """
+    """ Returns the username or character associated with the specified key code """
     return key_controller.map_scan_code(scan_code)
 
 def listen(callback):

@@ -16,7 +16,7 @@ from Player.Operators.Wizard.Wizard import *
 class Player:
     resume: object
 
-    def __init__(self, gui, resource_pack_name: str, operator: str, health: int = 100, x: int = 1920 / 2,
+    def __init__(self, gui, health: int = 100, x: int = 1920 / 2,
                  y: int = 1080 / 2, movement: int = 10) -> None:
         self.direction = UP
         self.health = health
@@ -31,7 +31,7 @@ class Player:
 
         self.gui = gui
         self.canvas = self.gui.canvas
-        self.resource_pack = resource_pack_name
+        self.resource_pack = self.gui.resource_pack.get()
         self.dont_change_image_protocol = False
 
         self.current_image_file = "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
@@ -41,7 +41,7 @@ class Player:
 
         self.knife = Knife(self, 25, 1)
 
-        self.operator = operator
+        self.operator = self.gui.operator.get()
         if self.operator == "Ninja":
             self.operator = Dash(self, 250, 5)
         elif self.operator == "Ghost":
@@ -187,8 +187,6 @@ class PlayerListener:
         self.player = player
         self.canvas = canvas
 
-        self.is_toggle_pause_running = False
-
     def on_press(self, key: str) -> None:
         if self.player.is_game_paused:
             return None
@@ -207,20 +205,10 @@ class PlayerListener:
             Thread(target=self.player.operator.use, args=[]).start()
 
     def toggle_pause(self) -> None:
-        if self.is_toggle_pause_running:
-            return None
-
         if self.player.is_game_paused:
             Thread(target=self.player.resume_game()).start()
         else:
             Thread(target=self.player.pause_game()).start()
-
-        self.is_toggle_pause_running = True
-        Thread(self.after_toggle_pause).start()
-
-    def after_toggle_pause(self) -> None:
-        sleep(0.5)
-        self.is_toggle_pause_running = False
 
     def shoot_bullet(self, event) -> None:
         try:
@@ -230,6 +218,7 @@ class PlayerListener:
 
     def join(self) -> None:
         self.canvas.bind_all("<Button-1>", self.shoot_bullet)
+        self.canvas.bind_all("<Escape>", lambda: self.toggle_pause())
 
         while True:
             while self.player.is_game_paused:
@@ -247,8 +236,6 @@ class PlayerListener:
                 Thread(target=self.on_press, args=["e"]).start()
             if keyboard.is_pressed("f"):
                 Thread(target=self.on_press, args=["f"]).start()
-            if keyboard.is_pressed("esc"):
-                Thread(target=self.toggle_pause).start()
 
             sleep(1 / self.player.max_steps_per_second)
 

@@ -4,6 +4,7 @@ from typing import List
 from os import listdir
 
 from GlobalFunctions import *
+from AccountController import *
 
 from Enemy.Enemy import *
 from Player.Player import *
@@ -44,7 +45,7 @@ class Gui:
         self.exit_button = Button(self.win, text="Exit", font=("Normal", 15, "normal"), command=self.exit_game)
         self.exit_button.place(x=15, y=15)
         self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"),
-                                   command=self.start_practise_game)
+                                   command=self.start_game)
         self.start_button.place(x=1920 / 2 - 45, y=1080 / 2 + 150)
 
         self.mode_label = Label(self.win, text="Game mode: ")
@@ -85,18 +86,30 @@ class Gui:
         self.win.destroy()
         exit()
 
-    def start_practise_game(self):
+    def start_game(self) -> None:
         self.delete_menu()
 
         if self.mode.get() == "Practise":
             Thread(target=self.start_practise).start()
+
         elif self.mode.get() == "Dev Text":
             Thread(target=self.start_dev_test).start()
+
         elif self.mode.get() == "Multiplayer":
-            pass
+            acc_cont = AccountController()
+            while not acc_cont.logged_in:
+                acc_cont.ask_for_login()
+            if acc_cont.is_server_offline:
+                say(self.player, self.canvas, text="Sorry, the server is offline", timeout=3)
+                return None
+
+            Thread(target=self.start_multiplayer).start()
+
+    def start_multiplayer(self) -> None:
+        self.player = Player(self, health=100)
 
     def start_practise(self) -> None:
-        self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
+        self.player = Player(self, health=100)
 
         def are_all_enemies_dead(enemies_: List[Enemy]) -> bool:
             dead_enemies = 0
@@ -112,7 +125,7 @@ class Gui:
             self.player.enemies = []
 
             for i in range(3):
-                say(self.player, self.canvas, text=wave["name"] + " is coming in " + str(3 - i) + "...", timeout=1)
+                say(self.player, self.canvas, text=wave["username"] + " is coming in " + str(3 - i) + "...", timeout=1)
                 sleep(1)
 
                 while self.player.is_game_paused:
@@ -145,7 +158,7 @@ class Gui:
         sleep(10)
 
     def start_dev_test(self) -> None:
-        self.player = Player(self, self.resource_pack.get(), self.operator.get(), health=100)
+        self.player = Player(self, health=100)
 
         # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
         # enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)

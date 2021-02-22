@@ -20,14 +20,34 @@ class AccountController:
     label: Label
     name_label: Label
     win: Tk
-    return_value: bool
+    logged_in: bool
 
     def __init__(self):
         self.backend_url = "http://localhost:8012/"
+        self.is_server_offline = False
 
     @staticmethod
     def is_user_logged_in() -> bool:
-        return path.exists("Data/User_Data/data.json")
+        if path.exists("Data/User_Data/data.json"):
+            data = loads(open("Data/User_Data/data.json", "r").read())
+
+            self.login(data["username"], data["password"])
+
+        return False
+
+    @staticmethod
+    def write_data(username: str, password: str) -> None:
+        with loads(open("Data/User_Data/data.json", "w").read()) as data:
+            if data["username"] != username or data["password"] != password:
+                with open("Data/User_Data/data.json", "w") as file:
+                    file.write(dumps({
+                        "logged_in": True,
+                        "data": {
+                            "username": username,
+                            "password": password,
+                        }
+                    }))
+                    file.close()
 
     def send_login_request(self, username: str, password: str) -> requests.request:
         data = {
@@ -50,12 +70,19 @@ class AccountController:
 
         return response
 
-    def login(self, name: str, password: str) -> None:
-        response = self.send_login_request(name, password)
+    def login(self, username: str, password: str) -> None:
+        try:
+            response = self.send_login_request(username, password)
+        except:
+            self.is_server_offline = True
+            self.win.destroy()
+            return None
 
         if response.status_code == 200:
+            self.write_data(username, password)
+
             self.label.config(text="Login successful")
-            self.return_value = True
+            self.logged_in = True
             sleep(1)
             self.win.destroy()
 
@@ -66,11 +93,18 @@ class AccountController:
             self.label.config(text="Wrong password, check your spelling and try again")
 
     def register(self, username: str, password: str, license_key: str):
-        response = self.send_register_request(username, password, license_key)
+        try:
+            response = self.send_register_request(username, password, license_key)
+        except:
+            self.is_server_offline = True
+            self.win.destroy()
+            return None
 
         if response.status_code == 200:
+            self.write_data(username, password)
+
             self.label.config(text="Register successful")
-            self.return_value = True
+            self.logged_in = True
             sleep(1)
             self.win.destroy()
 
@@ -127,12 +161,15 @@ class AccountController:
         self.login_button.place(x=142, y=100)
 
     def ask_for_login(self) -> bool:
+        if self.is_user_logged_in():
+            return True
+
         self.win = Tk()
         self.win.title("Login")
         self.win.geometry("200x125")
         self.win.resizable(0, 0)
 
-        self.return_value: bool = False
+        self.logged_in: bool = False
 
         self.label = Label(self.win, text="To enter the game you need to log in", wraplength=200)
         self.label.place(x=100, y=20, anchor="center")
@@ -157,8 +194,6 @@ class AccountController:
         self.name_entry.focus_force()
         self.win.focus_force()
         self.win.mainloop()
-
-        return self.return_value
 
 
 if __name__ == '__main__':

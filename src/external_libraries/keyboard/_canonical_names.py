@@ -1232,7 +1232,7 @@ if platform.system() == 'Linux':
 
 def normalize_name(name):
     """
-    Given a key name (e.g. "LEFT CONTROL"), clean up the string and convert to
+    Given a key username (e.g. "LEFT CONTROL"), clean up the string and convert to
     the canonical representation (e.g. "left ctrl") if one is known.
     """
     if not name or not isinstance(name, basestring):

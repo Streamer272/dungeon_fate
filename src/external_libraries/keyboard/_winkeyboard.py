@@ -166,7 +166,7 @@ keyboard_event_types = {
 }
 
 # List taken from the official documentation, but stripped of the OEM-specific keys.
-# Keys are virtual key codes, values are pairs (name, is_keypad).
+# Keys are virtual key codes, values are pairs (username, is_keypad).
 official_virtual_keys = {
     0x03: ('control-break processing', False),
     0x08: ('backspace', False),
@@ -382,7 +382,7 @@ def get_event_names(scan_code, vk, is_extended, modifiers):
 
 def _setup_name_tables():
     """
-    Ensures the scan code/virtual key code/name translation tables are
+    Ensures the scan code/virtual key code/username translation tables are
     filled.
     """
     with tables_lock:
@@ -410,7 +410,7 @@ def _setup_name_tables():
                         # Also map lowercased key names, but only after the properly cased ones.
                         lowercase_names = [name.lower() for name in names]
                         to_name[entry] = names + lowercase_names
-                        # Remember the "id" of the name, as the first techniques
+                        # Remember the "id" of the username, as the first techniques
                         # have better results and therefore priority.
                         for i, name in enumerate(map(normalize_name, names + lowercase_names)):
                             from_name[name].append((i, entry))
@@ -569,7 +569,7 @@ def map_name(name):
 
     entries = from_name.get(name)
     if not entries:
-        raise ValueError('Key name {} is not mapped to any known key.'.format(repr(name)))
+        raise ValueError('Key username {} is not mapped to any known key.'.format(repr(name)))
     for i, entry in entries:
         scan_code, vk, is_extended, modifiers = entry
         yield scan_code or -vk, modifiers
