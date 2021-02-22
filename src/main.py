@@ -97,10 +97,10 @@ class Gui:
 
         elif self.mode.get() == "Multiplayer":
             acc_cont = AccountController()
-            while not acc_cont.logged_in:
-                acc_cont.ask_for_login()
+            Thread(target=acc_cont.ask_for_login).start()
+            acc_cont.wait()
             if acc_cont.is_server_offline:
-                say(self.player, self.canvas, text="Sorry, the server is offline", timeout=3)
+                error_text_id = alert(self.canvas, text="Sorry, the server is offline", timeout=None)
                 return None
 
             Thread(target=self.start_multiplayer).start()
@@ -153,7 +153,7 @@ class Gui:
             if self.player.health == 0:
                 self.on_player_dead()
 
-        say(self.canvas, text="Congratulations! You won!", timeout=10)
+        say(self.player, self.canvas, text="Congratulations! You won!", timeout=10)
         self.player.is_game_paused = True
         sleep(10)
 
@@ -171,7 +171,7 @@ class Gui:
         Thread(target=self.pistol.shoot_bullet).start()
 
     def on_player_dead(self) -> None:
-        say(self.canvas, text="You lost!", timeout=10)
+        say(self.player, self.canvas, text="You lost!", timeout=10)
         self.player.is_game_paused = True
         sleep(10)
         exit()

@@ -10,6 +10,7 @@ import requests
 
 
 class AccountController:
+    is_server_offline: bool
     license_entry: Entry
     license_label: Label
     login_button: Button
@@ -25,6 +26,7 @@ class AccountController:
     def __init__(self):
         self.backend_url = "http://localhost:8012/"
         self.is_server_offline = False
+        self.logged_in: bool = False
 
     @staticmethod
     def is_user_logged_in() -> bool:
@@ -160,6 +162,14 @@ class AccountController:
         self.login_button.config(text="Register", command=lambda: Thread(target=self.submit_register).start())
         self.login_button.place(x=142, y=100)
 
+    def on_delete_window(self) -> None:
+        if self.logged_in or self.is_server_offline:
+            self.win.destroy()
+
+    def wait(self) -> None:
+        while not self.logged_in and not self.is_server_offline:
+            sleep(0.5)
+
     def ask_for_login(self) -> bool:
         if self.is_user_logged_in():
             return True
@@ -168,8 +178,7 @@ class AccountController:
         self.win.title("Login")
         self.win.geometry("200x125")
         self.win.resizable(0, 0)
-
-        self.logged_in: bool = False
+        self.win.protocol("WM_DELETE_WINDOW", self.on_delete_window)
 
         self.label = Label(self.win, text="To enter the game you need to log in", wraplength=200)
         self.label.place(x=100, y=20, anchor="center")
