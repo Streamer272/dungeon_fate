@@ -13,6 +13,9 @@ class Enemy:
 
     def __init__(self, player: Player, health: int = 50, damage: int = 10,
                  attack_speed: float = 0.5) -> None:
+        if player.health <= 0:
+            return
+
         self.player = player
         self.health = health
         self.game_running = True
@@ -64,16 +67,15 @@ class Enemy:
     def take_damage(self, damage: int) -> None:
         self.health -= damage
 
+        if self.health <= 0:
+            self.die()
+            return None
+
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
             self.dont_change_image_protocol = True
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
-
-        if self.health <= 0:
-            self.die()
-            return None
-
         Thread(target=self.set_image_to_default).start()
 
     def set_image_to_default(self) -> None:
@@ -90,7 +92,7 @@ class Enemy:
 
         while self.health > 0 and self.game_running:
             while self.player.is_game_paused:
-                sleep(1)
+                sleep(0.2)
 
             if self.player.health <= 0:
                 break
@@ -137,6 +139,7 @@ class Enemy:
         if self.health <= 0:
             self.die()
             sleep(self.despawn_timer)
+
         self.destroy()
 
     def die(self) -> None:

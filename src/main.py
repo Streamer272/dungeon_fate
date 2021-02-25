@@ -31,7 +31,8 @@ class Gui:
     def start_gui(self) -> None:
         self.win = Tk()
         self.win.title("2D Game")
-        self.win.attributes('-fullscreen', True)
+        # self.win.attributes('-fullscreen', True)
+        self.win.state("zoomed")
 
         self.canvas = Canvas(self.win, height=1080, width=1920, bg="white")
         self.canvas.pack()
@@ -125,7 +126,7 @@ class Gui:
             self.player.enemies = []
 
             for i in range(3):
-                say(self.player, self.canvas, text=wave["username"] + " is coming in " + str(3 - i) + "...", timeout=1)
+                say(self.player, self.canvas, text=wave["name"] + " is coming in " + str(3 - i) + "...", timeout=1)
                 sleep(1)
 
                 while self.player.is_game_paused:

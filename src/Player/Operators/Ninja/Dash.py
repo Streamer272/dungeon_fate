@@ -12,7 +12,7 @@ class Dash:
         self.canvas = player.canvas
         self.player = player
 
-        self.player.movement *= 1.25
+        self.player.movement *= 1.2
         self.dash_distance = dash_distance
         self.dash_recharge_time = dash_recharge_time
         self.dash_damage = dash_damage
@@ -65,6 +65,7 @@ class Dash:
         for enemy in self.player.enemies:
             if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
                 enemy.take_damage(self.dash_damage)
+
                 if enemy.health <= 0:
                     self.player.operator.on_enemy_killed()
 

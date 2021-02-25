@@ -124,7 +124,7 @@ class Player:
 
     def start_die_animation(self) -> None:
         while self.is_game_paused:
-            sleep(1)
+            sleep(0.2)
 
         for enemy in self.enemies:
             enemy.game_running = False
@@ -141,7 +141,7 @@ class Player:
 
     def take_damage(self, damage: int) -> None:
         while self.is_game_paused:
-            sleep(1)
+            sleep(0.2)
 
         if self.health >= 0:
             pass
@@ -168,7 +168,7 @@ class Player:
 
     def set_image_to_default(self) -> None:
         while self.is_game_paused:
-            sleep(1)
+            sleep(0.2)
 
         sleep(0.2)
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/movement/player" + str(
@@ -178,7 +178,7 @@ class Player:
                 self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
-        if self.health == 0:
+        if self.health <= 0:
             self.start_die_animation()
 
 
