@@ -4,7 +4,7 @@ from tkinter import *
 from threading import Thread
 from time import sleep
 
-from Player.Player import *
+from src.Player.Player import *
 
 
 class Enemy:

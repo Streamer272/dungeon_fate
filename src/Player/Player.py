@@ -1,16 +1,16 @@
 from tkinter import *
 from threading import Thread
 from time import sleep
-from external_libraries import keyboard
+from src.external_libraries import keyboard
 
-from Player.Weapons.Knife import *
-from Player.Weapons.Weapon import *
-from GlobalFunctions import *
-from AccountController import *
+from src.Player.Weapons.Knife import *
+from src.Player.Weapons.Weapon import *
+from src.GlobalFunctions import *
+from src.AccountController import *
 
-from Player.Operators.Ninja.Dash import *
-from Player.Operators.Ghost.Ghost import *
-from Player.Operators.Wizard.Wizard import *
+from src.Player.Operators.Ninja.Dash import *
+from src.Player.Operators.Ghost.Ghost import *
+from src.Player.Operators.Wizard.Wizard import *
 
 
 class Player:
