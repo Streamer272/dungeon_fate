@@ -7,7 +7,7 @@ from src.Player import *
 
 
 class Ghost:
-    def __init__(self, player, ghost_duration: int = 3, ghost_recharge_time: int = 10):
+    def __init__(self, player, ghost_duration: int = 3, ghost_recharge_time: int = 10) -> None:
         self.canvas = player.canvas
         self.player = player
 
@@ -25,9 +25,9 @@ class Ghost:
                                                               text="Passive: READY")
 
     def use(self) -> None:
-        Thread(target=self.use_ghost).start()
+        Thread(target=self.__use_ghost).start()
 
-    def use_ghost(self):
+    def __use_ghost(self) -> None:
         if self.is_ghost_recharging:
             return None
         self.canvas.itemconfig(self.ghost_recharge_label, text="Ghost: Using")
@@ -38,9 +38,9 @@ class Ghost:
         self.is_ghost_recharging = True
 
         self.canvas.itemconfig(self.ghost_recharge_label, text="Ghost: Not Ready")
-        Thread(target=self.recharge_ghost).start()
+        Thread(target=self.__recharge_ghost).start()
 
-    def recharge_ghost(self):
+    def __recharge_ghost(self) -> None:
         while self.player.is_game_paused:
             sleep(1)
 
@@ -56,7 +56,7 @@ class Ghost:
         self.is_ghost_recharging = False
         self.canvas.itemconfig(self.ghost_recharge_label, text="Ghost: READY")
 
-    def use_passive(self):
+    def __use_passive(self) -> None:
         if self.is_passive_recharging or self.player.invisible:
             return None
 
@@ -68,9 +68,9 @@ class Ghost:
         self.is_passive_recharging = True
 
         self.canvas.itemconfig(self.passive_recharge_label, text="Passive: Not Ready")
-        Thread(target=self.recharge_passive).start()
+        Thread(target=self.__recharge_passive).start()
 
-    def recharge_passive(self):
+    def __recharge_passive(self) -> None:
         while self.player.is_game_paused:
             sleep(1)
 
@@ -86,16 +86,16 @@ class Ghost:
         self.is_passive_recharging = False
         self.canvas.itemconfig(self.passive_recharge_label, text="Passive: READY")
 
-    def on_player_dead(self):
+    def on_player_dead(self) -> None:
         pass
 
-    def on_enemy_killed(self):
-        Thread(target=self.use_passive).start()
+    def on_enemy_killed(self) -> None:
+        Thread(target=self.__use_passive).start()
 
-    def on_player_knife(self):
+    def on_player_knife(self) -> None:
         pass
 
-    def on_take_damage(self):
+    def on_take_damage(self, damage: int) -> None:
         pass
 
 

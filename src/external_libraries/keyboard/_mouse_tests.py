@@ -182,10 +182,10 @@ class TestMouse(unittest.TestCase):
         self.assertFalse(self.triggers(mouse.on_button, [(UP, X)], buttons=[MIDDLE, LEFT], types=[UP, DOWN]))
 
     def test_ons(self):
-        self.assertTrue(self.triggers(mouse.on_click, [(UP, LEFT)]))
-        self.assertFalse(self.triggers(mouse.on_click, [(UP, RIGHT)]))
-        self.assertFalse(self.triggers(mouse.on_click, [(DOWN, LEFT)]))
-        self.assertFalse(self.triggers(mouse.on_click, [(DOWN, RIGHT)]))
+        self.assertTrue(self.triggers(mouse.__on_click, [(UP, LEFT)]))
+        self.assertFalse(self.triggers(mouse.__on_click, [(UP, RIGHT)]))
+        self.assertFalse(self.triggers(mouse.__on_click, [(DOWN, LEFT)]))
+        self.assertFalse(self.triggers(mouse.__on_click, [(DOWN, RIGHT)]))
 
         self.assertTrue(self.triggers(mouse.on_double_click, [(DOUBLE, LEFT)]))
         self.assertFalse(self.triggers(mouse.on_double_click, [(DOUBLE, RIGHT)]))

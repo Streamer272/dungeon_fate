@@ -155,7 +155,7 @@ class Player:
             self.start_die_animation()
             return None
 
-        self.operator.on_take_damage()
+        self.operator.on_take_damage(damage)
 
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(
                 self.direction) + ".png" and not self.dont_change_image_protocol:

@@ -6,7 +6,7 @@ Fixes:
     fix bullet damaging
     fix enemies die animation
     fix bullet deals multiplied damage
-    fix dash deals multiplied damage
+    - fix dash deals multiplied damage
 
 Features:
     add more operators (throwing knives, freeze time)

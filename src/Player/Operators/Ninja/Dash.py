@@ -8,7 +8,7 @@ from src.Player.Player import *
 
 
 class Dash:
-    def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 10, dash_damage: int = 50):
+    def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 10, dash_damage: int = 50) -> None:
         self.canvas = player.canvas
         self.player = player
 
@@ -22,9 +22,9 @@ class Dash:
                                                            text="Dash: READY")
 
     def use(self) -> None:
-        Thread(target=self.use_dash).start()
+        Thread(target=self.__use_dash).start()
 
-    def use_dash(self) -> None:
+    def __use_dash(self) -> None:
         if self.is_dash_recharging:
             return None
 
@@ -42,17 +42,17 @@ class Dash:
 
         self.is_dash_recharging = True
         self.canvas.itemconfig(self.dash_recharge_label, text="Dash: Not Ready")
-        Thread(target=self.recharge_dash).start()
+        Thread(target=self.__recharge_dash).start()
         self.player.dont_take_damage_protocol = True
 
         for i in range(floor(self.dash_distance / 50)):
             dash_to_x = floor(self.player.x + (x / (self.dash_distance / 50)) * (i + 1))
             dash_to_y = floor(self.player.y + (y / (self.dash_distance / 50)) * (i + 1))
-            Thread(target=self.move, args=[dash_to_x, dash_to_y, 0.05 * (i + 1)]).start()
+            Thread(target=self.__move, args=[dash_to_x, dash_to_y, 0.05 * (i + 1)]).start()
 
-        Thread(target=self.after_dash, args=[0.05 * floor(self.dash_distance / 50)]).start()
+        Thread(target=self.__after_dash, args=[0.05 * floor(self.dash_distance / 50)]).start()
 
-    def move(self, x: int, y: int, timeout: float = 0):
+    def __move(self, x: int, y: int, timeout: float = 0) -> None:
         if not (0 < x < 1920) or not (0 < y < 1080):
             return None
 
@@ -62,18 +62,20 @@ class Dash:
         self.player.x = x
         self.player.y = y
 
+        enemies_damaged = []
         for enemy in self.player.enemies:
-            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50:
+            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50 and enemy not in enemies_damaged:
                 enemy.take_damage(self.dash_damage)
+                enemies_damaged.append(enemy)
 
                 if enemy.health <= 0:
                     self.player.operator.on_enemy_killed()
 
-    def after_dash(self, timeout: int):
+    def __after_dash(self, timeout: int) -> None:
         sleep(timeout + 0.5)
         self.player.dont_take_damage_protocol = False
 
-    def recharge_dash(self):
+    def __recharge_dash(self) -> None:
         sleep(0.3)
 
         while self.player.is_game_paused:
@@ -92,16 +94,16 @@ class Dash:
         self.canvas.itemconfig(self.dash_recharge_label,
                                text="Dash: READY")
 
-    def on_player_dead(self):
+    def on_player_dead(self) -> None:
         pass
 
-    def on_enemy_killed(self):
+    def on_enemy_killed(self) -> None:
         pass
 
-    def on_player_knife(self):
+    def on_player_knife(self) -> None:
         pass
 
-    def on_take_damage(self):
+    def on_take_damage(self, damage: int) -> None:
         pass
 
 

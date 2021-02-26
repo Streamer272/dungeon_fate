@@ -130,7 +130,7 @@ class Enemy:
             self.y += y
             self.x += x
 
-            self.canvas.move(self.enemy, x, y)
+            self.canvas.__move(self.enemy, x, y)
             if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
                 self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
                 self.enemy_file = PhotoImage(file=self.current_image_file)
