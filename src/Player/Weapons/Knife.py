@@ -1,3 +1,7 @@
+"""
+knife file
+"""
+
 from tkinter import *
 
 from src.GlobalFunctions import *
@@ -5,6 +9,10 @@ from src.Player.Player import *
 
 
 class Knife:
+    """
+    knife controller
+    """
+
     def __init__(self, player, knife_damage: int = 25, knife_attack_speed: int = 1):
         self.canvas = player.canvas
         self.resource_pack = player.resource_pack
@@ -21,6 +29,11 @@ class Knife:
                                                           text="Knife damage: " + str(self.knife_damage))
 
     def attack_with_knife(self) -> None:
+        """
+        attacks with knife
+        :return: Nonetype
+        """
+
         if self.is_player_knifing:
             return None
 
@@ -44,7 +57,7 @@ class Knife:
             file="resource-packs/" + self.resource_pack + "/knife/knife" + str(self.player.direction) + ".png")
         self.canvas.image = knife_file
         knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
-        Thread(target=self.delete_knife, args=(knife, 0.2)).start()
+        Thread(target=self.__delete_knife, args=(knife, 0.2)).start()
 
         self.player.operator.on_player_knife()
 
@@ -54,7 +67,13 @@ class Knife:
                 if enemy.health <= 0:
                     self.player.operator.on_enemy_killed()
 
-    def delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
+    def __delete_knife(self, knife_number: int, timeout: int = 0.25) -> None:
+        """
+        deletes knife image
+        :param knife_number:
+        :param timeout:
+        """
+
         while self.player.is_game_paused:
             sleep(1)
 

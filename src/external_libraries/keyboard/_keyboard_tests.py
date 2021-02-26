@@ -539,7 +539,7 @@ class TestKeyboard(unittest.TestCase):
     def test_wait_infinite(self):
         self.triggered = False
         def process():
-            keyboard.wait()
+            keyboard.wait_until_done()
             self.triggered = True
         from threading import Thread
         t = Thread(target=process)
@@ -551,7 +551,7 @@ class TestKeyboard(unittest.TestCase):
     def test_wait_until_success(self):
         queue = keyboard._queue.Queue()
         def process():
-            queue.put(keyboard.wait(queue.get(timeout=0.5), suppress=True) or True)
+            queue.put(keyboard.wait_until_done(queue.get(timeout=0.5), suppress=True) or True)
         from threading import Thread
         t = Thread(target=process)
         t.daemon = True
@@ -562,7 +562,7 @@ class TestKeyboard(unittest.TestCase):
         self.assertTrue(queue.get(timeout=0.5))
     def test_wait_until_fail(self):
         def process():
-            keyboard.wait('a', suppress=True)
+            keyboard.wait_until_done('a', suppress=True)
             self.fail()
         from threading import Thread
         t = Thread(target=process)

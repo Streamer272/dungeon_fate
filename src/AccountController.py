@@ -1,3 +1,7 @@
+"""
+account controller file
+"""
+
 from threading import Thread
 from tkinter import *
 from json import loads, dumps
@@ -10,35 +14,36 @@ import requests
 
 
 class AccountController:
-    is_server_offline: bool
-    license_entry: Entry
-    license_label: Label
-    login_button: Button
-    register_button: Button
-    name_entry: Entry
-    password_entry: Entry
-    password_label: Label
-    label: Label
-    name_label: Label
-    win: Tk
-    logged_in: bool
+    """
+    account controller for multiplayer
+    """
 
     def __init__(self):
         self.backend_url = "http://localhost:8012/"
         self.is_server_offline = False
-        self.logged_in: bool = False
+        self.logged_in = False
 
-    @staticmethod
-    def is_user_logged_in() -> bool:
+    def __is_user_logged_in(self) -> bool:
+        """
+        returns bool is user if logged in
+        :return: bool
+        """
+
         if path.exists("Data/User_Data/data.json"):
             data = loads(open("Data/User_Data/data.json", "r").read())
 
-            self.login(data["username"], data["password"])
+            self.__login(data["username"], data["password"])
 
         return False
 
     @staticmethod
-    def write_data(username: str, password: str) -> None:
+    def __write_data(username: str, password: str) -> None:
+        """
+        writes data to cookie
+        :param username:
+        :param password:
+        """
+
         with open("Data/User_Data/data.json", "w") as file:
             file.write(dumps({
                 "logged_in": True,
@@ -49,7 +54,14 @@ class AccountController:
             }))
             file.close()
 
-    def send_login_request(self, username: str, password: str) -> requests.request:
+    def __send_login_request(self, username: str, password: str) -> requests.request:
+        """
+        sends login request to server
+        :param username:
+        :param password:
+        :return:
+        """
+
         data = {
             "username": username,
             "password": password
@@ -59,7 +71,15 @@ class AccountController:
 
         return response
 
-    def send_register_request(self, username: str, password: str, license_key: str) -> requests.request:
+    def __send_register_request(self, username: str, password: str, license_key: str) -> requests.request:
+        """
+        sends register request to server
+        :param username:
+        :param password:
+        :param license_key:
+        :return:
+        """
+
         data = {
             "username": username,
             "password": password,
@@ -70,16 +90,24 @@ class AccountController:
 
         return response
 
-    def login(self, username: str, password: str) -> None:
+    def __login(self, username: str, password: str) -> None:
+        """
+        logs in
+        :param username:
+        :param password:
+        :return:
+        """
+
         try:
-            response = self.send_login_request(username, password)
+            response = self.__send_login_request(username, password)
+
         except:
             self.is_server_offline = True
             self.win.destroy()
             return None
 
         if response.status_code == 200:
-            self.write_data(username, password)
+            self.__write_data(username, password)
 
             self.label.config(text="Login successful")
             self.logged_in = True
@@ -92,16 +120,25 @@ class AccountController:
         elif response.status_code == 402:
             self.label.config(text="Wrong password, check your spelling and try again")
 
-    def register(self, username: str, password: str, license_key: str):
+    def __register(self, username: str, password: str, license_key: str):
+        """
+        registers
+        :param username:
+        :param password:
+        :param license_key:
+        :return:
+        """
+
         try:
-            response = self.send_register_request(username, password, license_key)
+            response = self.__send_register_request(username, password, license_key)
+
         except:
             self.is_server_offline = True
             self.win.destroy()
             return None
 
         if response.status_code == 200:
-            self.write_data(username, password)
+            self.__write_data(username, password)
 
             self.label.config(text="Register successful")
             self.logged_in = True
@@ -109,12 +146,16 @@ class AccountController:
             self.win.destroy()
 
         elif response.status_code == 401:
-            label.config(text="User with that username already exists")
+            self.label.config(text="User with that username already exists")
 
         elif response.status_code == 403:
-            label.config(text="License key isn't valid")
+            self.label.config(text="License key isn't valid")
 
-    def submit_login(self) -> None:
+    def __submit_login(self) -> None:
+        """
+        on login button click
+        """
+
         username = self.name_entry.get()
         password = self.password_entry.get()
 
@@ -124,9 +165,13 @@ class AccountController:
             self.label.config(text="Please enter your full password")
         else:
             self.label.config(text="Processing login... Please wait...")
-            Thread(target=self.login, args=[username, password]).start()
+            Thread(target=self.__login, args=[username, password]).start()
 
-    def submit_register(self) -> None:
+    def __submit_register(self) -> None:
+        """
+        on register button click
+        """
+
         username = self.name_entry.get()
         password = self.password_entry.get()
         license_key = self.license_entry.get()
@@ -146,9 +191,13 @@ class AccountController:
 
         else:
             self.label.config(text="Processing register... Please wait...")
-            Thread(target=self.register, args=[username, password, license_key]).start()
+            Thread(target=self.__register, args=[username, password, license_key]).start()
 
-    def create_register_win(self) -> None:
+    def __create_register_win(self) -> None:
+        """
+        creates register window
+        """
+
         self.win.geometry("200x130")
         self.register_button.place_forget()
 
@@ -157,27 +206,40 @@ class AccountController:
         self.license_entry = Entry(self.win)
         self.license_entry.place(x=70, y=77)
 
-        self.login_button.config(text="Register", command=lambda: Thread(target=self.submit_register).start())
+        self.login_button.config(text="Register", command=lambda: Thread(target=self.__submit_register).start())
         self.login_button.place(x=142, y=100)
 
-    def on_delete_window(self) -> None:
+    def __on_delete_window(self) -> None:
+        """
+        on delete window
+        """
+
         if self.logged_in or self.is_server_offline:
             self.win.destroy()
 
-    def wait(self) -> None:
+    def wait_until_done(self) -> None:
+        """
+        waits until login is done
+        """
+
         while not self.logged_in and not self.is_server_offline:
             sleep(0.5)
         sleep(1)
 
     def ask_for_login(self) -> bool:
-        if self.is_user_logged_in():
+        """
+        creates main win
+        :return:
+        """
+
+        if self.__is_user_logged_in():
             return True
 
         self.win = Tk()
         self.win.title("Login")
         self.win.geometry("200x125")
         self.win.resizable(0, 0)
-        self.win.protocol("WM_DELETE_WINDOW", self.on_delete_window)
+        self.win.protocol("WM_DELETE_WINDOW", self.__on_delete_window)
 
         self.label = Label(self.win, text="To enter the game you need to log in", wraplength=200)
         self.label.place(x=100, y=20, anchor="center")
@@ -192,11 +254,11 @@ class AccountController:
         self.password_entry = Entry(self.win, show="*")
         self.password_entry.place(x=70, y=57)
 
-        self.login_button = Button(self.win, text="Login", command=lambda: Thread(target=self.submit_login).start())
+        self.login_button = Button(self.win, text="Login", command=lambda: Thread(target=self.__submit_login).start())
         self.login_button.place(x=152, y=80)
 
         self.register_button = Button(self.win, text="No account?\nCreate one",
-                                      command=lambda: Thread(target=self.create_register_win).start())
+                                      command=lambda: Thread(target=self.__create_register_win).start())
         self.register_button.place(x=10, y=80)
 
         self.name_entry.focus_force()

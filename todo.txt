@@ -1,9 +1,7 @@
 Fixes:
-    fix enemies on wave 3
-    fix enemies still spawning after death (wave 4)
-    fix mouse clicking speed
-    fix bullet damaging
-    fix bullet deals multiplied damage
+    fix enemies on wave 3 - needs testing
+    fix enemies still spawning after death (wave 4) - needs testing
+    fix bullet deals multiplied damage / fix bullet damaging - completely stuck
 
 Features:
     add more operators (throwing knives, freeze time)
@@ -15,3 +13,10 @@ Features:
     add multiplayer
     add health bars for enemies
     add go back from multiplayer after server offline message
+
+Else:
+    refactor code
+    optimize game
+    rework positions to absolute positions
+    make main.py openable
+    create first release

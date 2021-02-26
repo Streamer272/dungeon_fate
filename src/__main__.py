@@ -7,23 +7,15 @@ from src.Player.Weapons.Weapon import *
 
 
 class Gui:
-    mode_menu: OptionMenu
-    mode: StringVar
-    mode_label: Label
-    operator_label: Label
-    operator: StringVar
-    operator_option_menu: OptionMenu
-    resource_pack_label: Label
-    exit_button: Button
-    resource_pack_option_menu: OptionMenu
-    resource_pack: StringVar
-    start_button: object
-    pistol: object
-    player: Player
-    canvas: Canvas
-    win: Tk
+    """
+    gui controller
+    """
 
     def start_gui(self) -> None:
+        """
+        creates basic gui
+        """
+
         self.win = Tk()
         self.win.title("2D Game")
         self.win.attributes('-fullscreen', True)
@@ -37,6 +29,10 @@ class Gui:
         self.win.mainloop()
 
     def create_menu(self):
+        """
+        creates game menu
+        """
+
         self.exit_button = Button(self.win, text="Exit", font=("Normal", 15, "normal"), command=self.exit_game)
         self.exit_button.place(x=15, y=15)
         self.start_button = Button(self.win, text="Start", font=("Normal", 30, "normal"),
@@ -68,6 +64,10 @@ class Gui:
         self.resource_pack_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 100)
 
     def delete_menu(self):
+        """
+        deletes game menu
+        """
+
         self.exit_button.place_forget()
         self.start_button.place_forget()
         self.mode_label.place_forget()
@@ -78,10 +78,19 @@ class Gui:
         self.operator_option_menu.place_forget()
 
     def exit_game(self):
+        """
+        forcibly exites game
+        """
+
         self.win.destroy()
         exit()
 
     def start_game(self) -> None:
+        """
+        starts game
+        :return: Nonetype
+        """
+
         self.delete_menu()
 
         if self.mode.get() == "Practise":
@@ -93,7 +102,7 @@ class Gui:
         elif self.mode.get() == "Multiplayer":
             acc_cont = AccountController()
             Thread(target=acc_cont.ask_for_login).start()
-            acc_cont.wait()
+            acc_cont.wait_until_done()
             if acc_cont.is_server_offline:
                 error_text_id = alert(self.canvas, text="Sorry, the server is offline", timeout=None)
                 return None
@@ -101,12 +110,27 @@ class Gui:
             Thread(target=self.start_multiplayer).start()
 
     def start_multiplayer(self) -> None:
-        self.player = Player(self, health=100)
+        """
+        starts multiplayer game
+        """
+
+        self.player = Player(self)
 
     def start_practise(self) -> None:
-        self.player = Player(self, health=100)
+        """
+        starts practice game
+        :return: Nonetype
+        """
+
+        self.player = Player(self)
 
         def are_all_enemies_dead(enemies_: List[Enemy]) -> bool:
+            """
+            returns true if all enemies are dead
+            :param enemies_:
+            :return: bool
+            """
+
             dead_enemies = 0
             for enemy_ in enemies_:
                 if enemy_.health <= 0:
@@ -153,23 +177,26 @@ class Gui:
         sleep(10)
 
     def start_dev_test(self) -> None:
-        self.player = Player(self, health=100)
+        """
+        starts developer test
+        """
 
-        # enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
-        # enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)
-        # enemy.x = 1920/2
-        # enemy.y = 1080/2
-        # self.player.enemies.append(enemy)
+        self.player = Player(self)
 
-        self.pistol = Weapon(self.player)
-        sleep(1)
-        Thread(target=self.pistol.shoot_bullet).start()
+        enemy = Enemy(self.canvas, self.player, 1000, 0, 1)
+        enemy.canvas.coords(enemy.enemy, 1920/2, 1080/2)
+        enemy.x = 1920/2
+        enemy.y = 1080/2
+        self.player.enemies.append(enemy)
 
     def on_player_dead(self) -> None:
+        """
+        on player dead
+        """
+
         say(self.player, self.canvas, text="You lost!", timeout=10)
-        self.player.is_game_paused = True
         sleep(10)
-        exit()
+        self.exit_game()
 
 
 if __name__ == "__main__":

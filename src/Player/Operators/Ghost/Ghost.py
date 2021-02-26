@@ -1,3 +1,7 @@
+"""
+ghost file
+"""
+
 from tkinter import *
 from time import sleep
 from threading import Thread
@@ -7,6 +11,10 @@ from src.Player import *
 
 
 class Ghost:
+    """
+    ghost controller
+    """
+
     def __init__(self, player, ghost_duration: int = 3, ghost_recharge_time: int = 10) -> None:
         self.canvas = player.canvas
         self.player = player
@@ -87,15 +95,32 @@ class Ghost:
         self.canvas.itemconfig(self.passive_recharge_label, text="Passive: READY")
 
     def on_player_dead(self) -> None:
+        """
+        on player dead
+        """
+
         pass
 
     def on_enemy_killed(self) -> None:
-        Thread(target=self.__use_passive).start()
+        """
+        on enemy killed
+        """
+
+        pass
 
     def on_player_knife(self) -> None:
+        """
+        on player knife
+        """
+
         pass
 
     def on_take_damage(self, damage: int) -> None:
+        """
+        on take damage
+        :param damage:
+        """
+
         pass
 
 

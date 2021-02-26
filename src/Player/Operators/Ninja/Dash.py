@@ -1,3 +1,7 @@
+"""
+ninja file
+"""
+
 from tkinter import *
 from time import sleep
 from threading import Thread
@@ -8,6 +12,10 @@ from src.Player.Player import *
 
 
 class Dash:
+    """
+    dash controller
+    """
+
     def __init__(self, player, dash_distance: int = 250, dash_recharge_time: int = 10, dash_damage: int = 50) -> None:
         self.canvas = player.canvas
         self.player = player
@@ -22,6 +30,10 @@ class Dash:
                                                            text="Dash: READY")
 
     def use(self) -> None:
+        """
+        uses ability
+        """
+
         Thread(target=self.__use_dash).start()
 
     def __use_dash(self) -> None:
@@ -95,15 +107,32 @@ class Dash:
                                text="Dash: READY")
 
     def on_player_dead(self) -> None:
+        """
+        on player dead
+        """
+
         pass
 
     def on_enemy_killed(self) -> None:
+        """
+        on enemy killed
+        """
+
         pass
 
     def on_player_knife(self) -> None:
+        """
+        on player knife
+        """
+
         pass
 
     def on_take_damage(self, damage: int) -> None:
+        """
+        on take damage
+        :param damage:
+        """
+
         pass
 
 

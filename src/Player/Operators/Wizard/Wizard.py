@@ -1,3 +1,7 @@
+"""
+wizard file
+"""
+
 from tkinter import *
 from time import sleep
 from threading import Thread
@@ -104,15 +108,32 @@ class Wizard:
         Thread(target=self.__recharge_teleport).start()
 
     def on_player_dead(self) -> None:
-        self.is_teleport_selection_active = False
+        """
+        on player dead
+        """
+
+        pass
 
     def on_enemy_killed(self) -> None:
+        """
+        on enemy killed
+        """
+
         Thread(target=self.__use_passive).start()
 
     def on_player_knife(self) -> None:
+        """
+        on player knife
+        """
+
         pass
 
     def on_take_damage(self, damage: int) -> None:
+        """
+        on take damage
+        :param damage:
+        """
+
         pass
 
 

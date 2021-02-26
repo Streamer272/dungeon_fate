@@ -8,4 +8,4 @@ You can use knife with E.<br>
 You can use your ability with F.
 
 ### How to run the game
-You can run the game by opening main.py file in src directory, note that you need to have Python 3.9 installed
+Game can't run without PyCharm IDE - only for a while

@@ -3,7 +3,7 @@ import unittest
 import time
 
 from ._mouse_event import MoveEvent, ButtonEvent, WheelEvent, LEFT, RIGHT, MIDDLE, X, X2, UP, DOWN, DOUBLE
-from keyboard import mouse
+import mouse
 
 class FakeOsMouse(object):
     def __init__(self):
@@ -130,19 +130,19 @@ class TestMouse(unittest.TestCase):
         self.assertEqual(mouse.get_position(), mouse._os_mouse.get_position())
 
     def test_move(self):
-        mouse.shoot(0, 0)
+        mouse.move(0, 0)
         self.assertEqual(mouse._os_mouse.get_position(), (0, 0))
-        mouse.shoot(100, 500)
+        mouse.move(100, 500)
         self.assertEqual(mouse._os_mouse.get_position(), (100, 500))
-        mouse.shoot(1, 2, False)
+        mouse.move(1, 2, False)
         self.assertEqual(mouse._os_mouse.get_position(), (101, 502))
 
-        mouse.shoot(0, 0)
-        mouse.shoot(100, 499, True, duration=0.01)
+        mouse.move(0, 0)
+        mouse.move(100, 499, True, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (100, 499))
-        mouse.shoot(100, 1, False, duration=0.01)
+        mouse.move(100, 1, False, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (200, 500))
-        mouse.shoot(0, 0, False, duration=0.01)
+        mouse.move(0, 0, False, duration=0.01)
         self.assertEqual(mouse._os_mouse.get_position(), (200, 500))
 
     def triggers(self, fn, events, **kwargs):
@@ -182,10 +182,10 @@ class TestMouse(unittest.TestCase):
         self.assertFalse(self.triggers(mouse.on_button, [(UP, X)], buttons=[MIDDLE, LEFT], types=[UP, DOWN]))
 
     def test_ons(self):
-        self.assertTrue(self.triggers(mouse.__on_click, [(UP, LEFT)]))
-        self.assertFalse(self.triggers(mouse.__on_click, [(UP, RIGHT)]))
-        self.assertFalse(self.triggers(mouse.__on_click, [(DOWN, LEFT)]))
-        self.assertFalse(self.triggers(mouse.__on_click, [(DOWN, RIGHT)]))
+        self.assertTrue(self.triggers(mouse.on_click, [(UP, LEFT)]))
+        self.assertFalse(self.triggers(mouse.on_click, [(UP, RIGHT)]))
+        self.assertFalse(self.triggers(mouse.on_click, [(DOWN, LEFT)]))
+        self.assertFalse(self.triggers(mouse.on_click, [(DOWN, RIGHT)]))
 
         self.assertTrue(self.triggers(mouse.on_double_click, [(DOUBLE, LEFT)]))
         self.assertFalse(self.triggers(mouse.on_double_click, [(DOUBLE, RIGHT)]))

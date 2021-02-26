@@ -1,7 +1,12 @@
+"""
+player file
+"""
+
 from tkinter import *
 from threading import Thread
 from time import sleep
 from src.external_libraries import keyboard
+from src.external_libraries import mouse
 
 from src.Player.Weapons.Knife import *
 from src.Player.Weapons.Weapon import *
@@ -14,8 +19,9 @@ from src.Player.Operators.Wizard.Wizard import *
 
 
 class Player:
-    pause_game_text_id: int
-    resume: object
+    """
+    player controller
+    """
 
     def __init__(self, gui, health: int = 100, x: int = 1920 / 2,
                  y: int = 1080 / 2, movement: int = 10) -> None:
@@ -40,34 +46,48 @@ class Player:
         self.sprite_file = PhotoImage(file=self.current_image_file)
         self.sprite = self.canvas.create_image(self.x, self.y, anchor=N, image=self.sprite_file)
 
-        self.knife = Knife(self, 25, 1)
+        self.knife = Knife(self)
 
         self.operator = self.gui.operator.get()
         if self.operator == "Ninja":
-            self.operator = Dash(self, 250, 5)
+            self.operator = Dash(self)
         elif self.operator == "Ghost":
-            self.operator = Ghost(self, 3, 10)
+            self.operator = Ghost(self)
         elif self.operator == "Wizard":
-            self.operator = Wizard(self, 30, 10)
+            self.operator = Wizard(self)
         else:
-            self.operator = Dash(self, 250, 5)
+            self.operator = Dash(self)
 
         self.enemies = []
         self.is_game_paused = False
-        self.pistol = Weapon(self, weapon_damage=10, weapon_fire_rate=2)
+        self.pistol = Weapon(self)
 
-        listener = PlayerListener(self, self.canvas)
-        Thread(target=listener.join).start()
+        self.listener = PlayerListener(self, self.canvas)
+        Thread(target=self.listener.join).start()
 
         self.health_label = self.canvas.create_text(1840, 20, font="Normal 20 normal normal",
                                                     text="Health: " + str(self.health))
 
+    def __del__(self):
+        self.resume_game()
+        self.listener.leave()
+        del self.listener
+        self.canvas.delete(self.sprite)
+
     def pause_game(self) -> None:
+        """
+        pauses game
+        """
+
         self.is_game_paused = True
 
         self.pause_game_text_id = alert(self.canvas, text="Game Paused", timeout=None)
 
     def resume_game(self) -> None:
+        """
+        resumes game
+        """
+
         self.is_game_paused = False
 
         try:
@@ -76,6 +96,13 @@ class Player:
             pass
 
     def move(self, direction: int, steps: int) -> None:
+        """
+        moves player
+        :param direction:
+        :param steps:
+        :return: Nonetype
+        """
+
         if self.is_moving:
             return None
 
@@ -119,13 +146,13 @@ class Player:
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
-        Thread(target=self.after_move).start()
+        Thread(target=self.__after_move).start()
 
-    def after_move(self):
+    def __after_move(self):
         sleep(1 / self.max_steps_per_second)
         self.is_moving = False
 
-    def start_die_animation(self) -> None:
+    def __start_die_animation(self) -> None:
         while self.is_game_paused:
             sleep(0.2)
 
@@ -143,6 +170,12 @@ class Player:
                 self.canvas.itemconfig(self.sprite, image=self.sprite_file)
 
     def take_damage(self, damage: int) -> None:
+        """
+        take damage from any source
+        :param damage:
+        :return: Nonetype
+        """
+
         while self.is_game_paused:
             sleep(0.2)
 
@@ -153,11 +186,11 @@ class Player:
             return None
 
         self.health -= damage
-        self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
         self.operator.on_take_damage(damage)
+        self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
 
         if self.health <= 0:
-            self.start_die_animation()
+            self.__start_die_animation()
             return None
 
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(
@@ -167,9 +200,9 @@ class Player:
                 self.direction) + ".png"
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
-        Thread(target=self.set_image_to_default).start()
+        Thread(target=self.__set_image_to_default).start()
 
-    def set_image_to_default(self) -> None:
+    def __set_image_to_default(self) -> None:
         while self.is_game_paused:
             sleep(0.2)
 
@@ -182,15 +215,24 @@ class Player:
             self.sprite_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.sprite, image=self.sprite_file)
         if self.health <= 0:
-            self.start_die_animation()
+            self.__start_die_animation()
 
 
 class PlayerListener:
+    """
+    player listener controller
+    """
+
     def __init__(self, player: Player, canvas: Canvas) -> None:
         self.player = player
         self.canvas = canvas
 
-    def on_press(self, key: str) -> None:
+        self.listen = True
+
+    def __del__(self):
+        self.leave()
+
+    def __on_press(self, key: str) -> None:
         if self.player.is_game_paused:
             return None
 
@@ -207,44 +249,61 @@ class PlayerListener:
         elif key == "f":
             Thread(target=self.player.operator.use, args=[]).start()
 
-    def toggle_pause(self) -> None:
+    def __toggle_pause(self) -> None:
         if self.player.is_game_paused:
             Thread(target=self.player.resume_game()).start()
         else:
             Thread(target=self.player.pause_game()).start()
 
-    def shoot_bullet(self, event) -> None:
-        if self.player.is_game_paused:
+    def __shoot_bullet(self, position: tuple) -> None:
+        if self.player.is_game_paused or not self.listen:
             return None
 
         try:
-            Thread(target=self.player.pistol.shoot_bullet, args=[event.x, event.y]).start()
+            Thread(target=self.player.pistol.shoot_bullet, args=[position[0], position[1]]).start()
 
         except TypeError:
             pass
 
-    def join(self) -> None:
-        self.canvas.bind_all("<Button-1>", lambda event: self.shoot_bullet(event))
-        self.canvas.bind_all("<Escape>", lambda event: self.toggle_pause())
+    def __pass__(self) -> None:
+        pass
 
-        while True:
+    def join(self) -> None:
+        """
+        starts listener
+        """
+
+        mouse.on_click(lambda: self.__shoot_bullet(mouse.get_position()))
+        self.canvas.bind_all("<Escape>", lambda event: self.__toggle_pause())
+
+        while self.listen:
             while self.player.is_game_paused:
                 sleep(0.2)
 
             if keyboard.is_pressed("w"):
-                Thread(target=self.on_press, args=["w"]).start()
+                Thread(target=self.__on_press, args=["w"]).start()
             elif keyboard.is_pressed("d"):
-                Thread(target=self.on_press, args=["d"]).start()
+                Thread(target=self.__on_press, args=["d"]).start()
             elif keyboard.is_pressed("s"):
-                Thread(target=self.on_press, args=["s"]).start()
+                Thread(target=self.__on_press, args=["s"]).start()
             elif keyboard.is_pressed("a"):
-                Thread(target=self.on_press, args=["a"]).start()
+                Thread(target=self.__on_press, args=["a"]).start()
             if keyboard.is_pressed("e"):
-                Thread(target=self.on_press, args=["e"]).start()
+                Thread(target=self.__on_press, args=["e"]).start()
             if keyboard.is_pressed("f"):
-                Thread(target=self.on_press, args=["f"]).start()
+                Thread(target=self.__on_press, args=["f"]).start()
 
             sleep(1 / self.player.max_steps_per_second)
+
+        self.canvas.unbind_all("<Escape>")
+        mouse.on_click(lambda: self.__pass__())
+
+    def leave(self) -> None:
+        """
+        stops listener
+        """
+
+        self.listen = False
 
 
 if __name__ == '__main__':

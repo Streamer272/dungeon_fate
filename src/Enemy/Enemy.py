@@ -1,3 +1,7 @@
+"""
+enemy file
+"""
+
 from random import randint, choice
 from math import floor
 from tkinter import *
@@ -8,8 +12,9 @@ from src.Player.Player import *
 
 
 class Enemy:
-    move_to_y: object
-    move_to_x: object
+    """
+    enemy controller
+    """
 
     def __init__(self, player: Player, health: int = 50, damage: int = 10,
                  attack_speed: float = 0.5) -> None:
@@ -26,7 +31,7 @@ class Enemy:
         self.charging_attack = False
         self.attack_speed = attack_speed
 
-        self.x, self.y = self.generate_spawn_position()
+        self.x, self.y = self.__generate_spawn_position()
 
         self.canvas = player.canvas
         self.resource_pack = self.player.resource_pack
@@ -35,7 +40,15 @@ class Enemy:
         self.enemy_file = PhotoImage(file=self.current_image_file)
         self.enemy = self.canvas.create_image(self.x, self.y, anchor=N, image=self.enemy_file)
 
-    def generate_spawn_position(self):
+    def __del__(self):
+        self.__delete()
+
+    def __generate_spawn_position(self) -> tuple:
+        """
+        generates random position for enemy
+        :return: tuple
+        """
+
         x_possible = [[self.player.x - 500, self.player.x - 250], [self.player.x + 250, self.player.x + 500]]
         y_possible = [[self.player.y - 500, self.player.y - 250], [self.player.y + 250, self.player.y + 500]]
         x_choice = choice(x_possible)
@@ -44,34 +57,49 @@ class Enemy:
         y = randint(floor(y_choice[0]), floor(y_choice[1]))
 
         if x < 0 or y < 0 or x > 1920 or y > 1080:
-            x, y = self.generate_spawn_position()
+            x, y = self.__generate_spawn_position()
 
         if x % 5 != 0 or y % 5 != 0:
-            x, y = self.generate_spawn_position()
+            x, y = self.__generate_spawn_position()
 
         return x, y
 
-    def attack_enemy(self) -> None:
+    def __attack_player(self) -> None:
+        """
+        attacks player if in range
+        :return: Nonetype
+        """
+
         if self.player.invisible:
             return None
 
         if self.player.x - 50 < self.x < self.player.x + 50 and self.player.y - 50 < self.y < self.player.y + 50 and not self.charging_attack:
             self.player.take_damage(self.damage)
             self.charging_attack = True
-            Thread(target=self.charge_attack).start()
+            Thread(target=self.__charge_attack).start()
 
-    def charge_attack(self) -> None:
+    def __charge_attack(self) -> None:
+        """
+        recharges attack after attacking player
+        """
+
         sleep(1 / self.attack_speed)
         self.charging_attack = False
 
     def take_damage(self, damage: int) -> None:
+        """
+        takes damage from any source
+        :param damage:
+        :return: Nonetype
+        """
+
         if self.health <= 0:
             return None
 
         self.health -= damage
 
         if self.health <= 0:
-            self.die()
+            self.__start_die_animation()
             return None
 
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
@@ -79,9 +107,13 @@ class Enemy:
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/damaged/enemy-damaged" + str(self.direction) + ".png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
-        Thread(target=self.set_image_to_default).start()
+        Thread(target=self.__set_image_to_default).start()
 
-    def set_image_to_default(self) -> None:
+    def __set_image_to_default(self) -> None:
+        """
+        resets image to default
+        """
+
         sleep(0.2)
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png":
             self.dont_change_image_protocol = False
@@ -89,8 +121,13 @@ class Enemy:
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
+    # noinspection PyCompatibility
     def auto_move(self) -> None:
-        self.move_to_x = 0
+        """
+        automatically moves enemy against player
+        """
+
+        self.move_to_x: int = 0
         self.move_to_y = 0
 
         while self.health > 0 and self.game_running:
@@ -100,7 +137,7 @@ class Enemy:
             if self.player.health <= 0:
                 break
 
-            self.attack_enemy()
+            self.__attack_player()
             sleep(0.01)
 
             x = 0
@@ -140,19 +177,27 @@ class Enemy:
                 self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
         if self.health <= 0:
-            self.die()
+            self.__start_die_animation()
             sleep(self.despawn_timer)
 
-        self.destroy()
+        self.__delete()
 
-    def die(self) -> None:
+    def __start_die_animation(self) -> None:
+        """
+        starts die animation
+        """
+
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/enemy-dead.png":
             self.dont_change_image_protocol = True
             self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/enemy-dead.png"
             self.enemy_file = PhotoImage(file=self.current_image_file)
             self.canvas.itemconfig(self.enemy, image=self.enemy_file)
 
-    def destroy(self) -> None:
+    def __delete(self) -> None:
+        """
+        deletes enemy image from tkinter
+        """
+
         self.canvas.delete(self.enemy)
 
 
