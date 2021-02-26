@@ -130,14 +130,14 @@ class Gui:
                 sleep(1)
 
                 while self.player.is_game_paused:
-                    sleep(1)
+                    sleep(0.2)
 
             for i in range(wave["enemy-count"]):
                 if self.player.health == 0:
                     self.on_player_dead()
 
                 while self.player.is_game_paused:
-                    sleep(1)
+                    sleep(0.2)
 
                 enemy = Enemy(self.player, wave["enemy"]["health"], wave["enemy"]["damage"],
                               wave["enemy"]["attack-speed"])
