@@ -2,8 +2,8 @@ from tkinter import *
 from time import sleep
 from threading import Thread
 
-from GlobalFunctions import *
-from Player import *
+from src.GlobalFunctions import *
+from src.Player import *
 
 
 class Ghost:

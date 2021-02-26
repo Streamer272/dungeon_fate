@@ -3,8 +3,8 @@ from time import sleep
 from threading import Thread
 from math import floor
 
-from GlobalFunctions import *
-from Player import *
+from src.GlobalFunctions import *
+from src.Player.Player import *
 
 
 class Dash:

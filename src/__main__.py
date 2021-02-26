@@ -1,14 +1,14 @@
 from json import loads
-from tkinter import Label, StringVar, OptionMenu
+from tkinter import *
 from typing import List
 from os import listdir
 
-from GlobalFunctions import *
-from AccountController import *
+from src.GlobalFunctions import *
+from src.AccountController import *
 
-from Enemy.Enemy import *
-from Player.Player import *
-from Player.Weapons.Weapon import *
+from src.Enemy.Enemy import *
+from src.Player.Player import *
+from src.Player.Weapons.Weapon import *
 
 
 class Gui:
@@ -31,8 +31,7 @@ class Gui:
     def start_gui(self) -> None:
         self.win = Tk()
         self.win.title("2D Game")
-        # self.win.attributes('-fullscreen', True)
-        self.win.state("zoomed")
+        self.win.attributes('-fullscreen', True)
 
         self.canvas = Canvas(self.win, height=1080, width=1920, bg="white")
         self.canvas.pack()
@@ -61,7 +60,7 @@ class Gui:
         self.operator_label.place(x=1920 / 2 - 85, y=1080 / 2 + 5 + 50)
         self.operator = StringVar(self.win)
         self.operator.set("Ninja")
-        classes_options = listdir("Player/Operators")
+        classes_options = listdir("src/Player/Operators")
         self.operator_option_menu = OptionMenu(self.win, self.operator, *classes_options)
         self.operator_option_menu.place(x=1920 / 2 - 20, y=1080 / 2 + 50)
 
@@ -120,7 +119,7 @@ class Gui:
 
             return dead_enemies == len(enemies_)
 
-        waves = loads(open("Data/Levels/practise.json", "r").read())
+        waves = loads(open("src/Data/Levels/practise.json", "r").read())
         for wave in waves:
             enemies = []
             self.player.enemies = []

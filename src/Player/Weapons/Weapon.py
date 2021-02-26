@@ -4,7 +4,7 @@ from threading import Thread
 from time import sleep
 from typing import Optional
 
-from Player.Player import *
+from src.Player.Player import *
 
 UP_ = 0
 RIGHT_ = 1

@@ -1,7 +1,7 @@
 from tkinter import *
 
-from GlobalFunctions import *
-from Player import *
+from src.GlobalFunctions import *
+from src.Player.Player import *
 
 
 class Knife:
