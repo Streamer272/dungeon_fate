@@ -14,11 +14,12 @@ from src.Player.Operators.Wizard.Wizard import *
 
 
 class Player:
+    pause_game_text_id: int
     resume: object
 
     def __init__(self, gui, health: int = 100, x: int = 1920 / 2,
                  y: int = 1080 / 2, movement: int = 10) -> None:
-        self.direction = UP
+        self.direction = D_UP
         self.health = health
         self.invisible = False
         self.dont_take_damage_protocol = False
@@ -62,16 +63,15 @@ class Player:
                                                     text="Health: " + str(self.health))
 
     def pause_game(self) -> None:
-        print("Pausing game")
         self.is_game_paused = True
-        resume_file = PhotoImage("resource-packs/" + self.resource_pack + "/resume.png")
-        self.resume = self.canvas.create_image(1920 / 2 - 200, 1080 / 2 - 200, anchor=N, image=resume_file)
+
+        self.pause_game_text_id = alert(self.canvas, text="Game Paused", timeout=None)
 
     def resume_game(self) -> None:
-        print("Resuming game")
         self.is_game_paused = False
+
         try:
-            self.canvas.delete(self.resume)
+            self.canvas.delete(self.pause_game_text_id)
         except NameError:
             pass
 
@@ -82,22 +82,25 @@ class Player:
         x = 0
         y = 0
 
-        if direction == UP:
+        if direction == D_UP:
             if self.y - steps - 1 <= 0:
                 return None
 
             y -= steps
-        elif direction == RIGHT:
+
+        elif direction == D_RIGHT:
             if self.x + steps + 1 >= 1890:
                 return None
 
             x += steps
-        elif direction == DOWN:
+
+        elif direction == D_DOWN:
             if self.y + steps + 1 >= 1030:
                 return None
 
             y += steps
-        elif direction == LEFT:
+
+        elif direction == D_LEFT:
             if self.x - steps - 1 <= 30:
                 return None
 
@@ -143,19 +146,19 @@ class Player:
         while self.is_game_paused:
             sleep(0.2)
 
-        if self.health >= 0:
-            pass
+        if self.health <= 0:
+            return None
 
         if self.invisible or self.dont_take_damage_protocol:
             return None
 
         self.health -= damage
         self.canvas.itemconfig(self.health_label, text="Health: " + str(self.health))
+        self.operator.on_take_damage(damage)
+
         if self.health <= 0:
             self.start_die_animation()
             return None
-
-        self.operator.on_take_damage(damage)
 
         if not self.current_image_file == "resource-packs/" + self.resource_pack + "/player/damaged/player-damaged" + str(
                 self.direction) + ".png" and not self.dont_change_image_protocol:
@@ -192,13 +195,13 @@ class PlayerListener:
             return None
 
         if key == "w":
-            Thread(target=self.player.move, args=[UP, self.player.movement]).start()
+            Thread(target=self.player.move, args=[D_UP, self.player.movement]).start()
         elif key == "d":
-            Thread(target=self.player.move, args=[RIGHT, self.player.movement]).start()
+            Thread(target=self.player.move, args=[D_RIGHT, self.player.movement]).start()
         elif key == "s":
-            Thread(target=self.player.move, args=[DOWN, self.player.movement]).start()
+            Thread(target=self.player.move, args=[D_DOWN, self.player.movement]).start()
         elif key == "a":
-            Thread(target=self.player.move, args=[LEFT, self.player.movement]).start()
+            Thread(target=self.player.move, args=[D_LEFT, self.player.movement]).start()
         elif key == "e":
             Thread(target=self.player.knife.attack_with_knife, args=[]).start()
         elif key == "f":
@@ -211,18 +214,22 @@ class PlayerListener:
             Thread(target=self.player.pause_game()).start()
 
     def shoot_bullet(self, event) -> None:
+        if self.player.is_game_paused:
+            return None
+
         try:
             Thread(target=self.player.pistol.shoot_bullet, args=[event.x, event.y]).start()
+
         except TypeError:
             pass
 
     def join(self) -> None:
-        self.canvas.bind_all("<Button-1>", self.shoot_bullet)
-        self.canvas.bind_all("<Escape>", lambda: self.toggle_pause())
+        self.canvas.bind_all("<Button-1>", lambda event: self.shoot_bullet(event))
+        self.canvas.bind_all("<Escape>", lambda event: self.toggle_pause())
 
         while True:
             while self.player.is_game_paused:
-                sleep(1)
+                sleep(0.2)
 
             if keyboard.is_pressed("w"):
                 Thread(target=self.on_press, args=["w"]).start()

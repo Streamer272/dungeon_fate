@@ -27,25 +27,24 @@ class Knife:
         self.is_player_knifing = True
         x = self.player.x
         y = self.player.y
-        rotation = 0
 
-        if self.player.direction == UP:
+        if self.player.direction == D_UP:
             y -= 50
-            rotation = 0
-        elif self.player.direction == RIGHT:
-            x += 50
-            rotation = 1
-        elif self.player.direction == DOWN:
-            y += 50
-            rotation = 2
-        elif self.player.direction == LEFT:
-            x -= 50
-            rotation = 3
 
-        knife_file = PhotoImage(file="resource-packs/" + self.resource_pack + "/knife/knife" + str(rotation) + ".png")
+        elif self.player.direction == D_RIGHT:
+            x += 50
+
+        elif self.player.direction == D_DOWN:
+            y += 50
+
+        elif self.player.direction == D_LEFT:
+            x -= 50
+
+        knife_file = PhotoImage(
+            file="resource-packs/" + self.resource_pack + "/knife/knife" + str(self.player.direction) + ".png")
         self.canvas.image = knife_file
         knife = self.canvas.create_image(x, y, anchor=N, image=knife_file)
-        Thread(target=self.delete_knife, args=(knife, 0.25)).start()
+        Thread(target=self.delete_knife, args=(knife, 0.2)).start()
 
         self.player.operator.on_player_knife()
 

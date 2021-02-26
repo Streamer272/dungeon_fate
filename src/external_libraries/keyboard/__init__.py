@@ -48,7 +48,7 @@ keyboard.write('The quick brown fox jumps over the lazy dog.')
 
 keyboard.add_hotkey('ctrl+shift+a', print, args=('triggered', 'hotkey'))
 
-# Press PAGE UP then PAGE DOWN to type "foobar".
+# Press PAGE D_UP then PAGE D_DOWN to type "foobar".
 keyboard.add_hotkey('page up, page down', lambda: keyboard.write('foobar'))
 
 # Blocks until you press esc.

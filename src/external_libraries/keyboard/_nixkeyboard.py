@@ -125,7 +125,7 @@ def listen(callback):
             continue
 
         scan_code = code
-        event_type = KEY_DOWN if value else KEY_UP # 0 = UP, 1 = DOWN, 2 = HOLD
+        event_type = KEY_DOWN if value else KEY_UP # 0 = D_UP, 1 = D_DOWN, 2 = HOLD
 
         pressed_modifiers_tuple = tuple(sorted(pressed_modifiers))
         names = to_name[(scan_code, pressed_modifiers_tuple)] or to_name[(scan_code, ())] or ['unknown']

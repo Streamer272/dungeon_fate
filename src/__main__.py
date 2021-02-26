@@ -1,10 +1,5 @@
-from json import loads
-from tkinter import *
 from typing import List
 from os import listdir
-
-from src.GlobalFunctions import *
-from src.AccountController import *
 
 from src.Enemy.Enemy import *
 from src.Player.Player import *

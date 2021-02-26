@@ -1,3 +1,6 @@
 venv
 .idea
 /src/img/bullet_trajectory.png
+.vscode
+.vs
+src/Scratches

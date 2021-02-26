@@ -1,12 +1,9 @@
 Fixes:
     fix enemies on wave 3
     fix enemies still spawning after death (wave 4)
-    fix pause and resume game
     fix mouse clicking speed
     fix bullet damaging
-    fix enemies die animation
     fix bullet deals multiplied damage
-    - fix dash deals multiplied damage
 
 Features:
     add more operators (throwing knives, freeze time)

@@ -65,6 +65,9 @@ class Enemy:
         self.charging_attack = False
 
     def take_damage(self, damage: int) -> None:
+        if self.health <= 0:
+            return None
+
         self.health -= damage
 
         if self.health <= 0:
@@ -130,7 +133,7 @@ class Enemy:
             self.y += y
             self.x += x
 
-            self.canvas.__move(self.enemy, x, y)
+            self.canvas.move(self.enemy, x, y)
             if not self.current_image_file == "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png" and not self.dont_change_image_protocol:
                 self.current_image_file = "resource-packs/" + self.resource_pack + "/enemy/movement/enemy" + str(self.direction) + ".png"
                 self.enemy_file = PhotoImage(file=self.current_image_file)

@@ -66,13 +66,13 @@ class Bullet:
             if self.destroy_bullet_protocol:
                 return None
 
-            print("Checking collision with enemy " + str(enemy.x) + ":" + str(enemy.y) + " and bullet " + str(x) + ":" + str(y))
+            # print("Checking collision with enemy " + str(enemy.x) + ":" + str(enemy.y) + " and bullet " + str(x) + ":" + str(y))
 
             if enemy.x - 25 < x < enemy.x + 25 and enemy.y - 25 < y < enemy.y + 25 and not enemy.health <= 0:
                 Thread(target=self.do_damage, args=[enemy, timeout]).start()
 
     def do_damage(self, enemy, timeout: float):
-        print("Collision approved, deleting bullet")
+        # print("Collision approved, deleting bullet")
 
         Thread(target=self.delete_bullet, args=[timeout]).start()
 

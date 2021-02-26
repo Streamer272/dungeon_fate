@@ -31,16 +31,17 @@ class Dash:
         x = 0
         y = 0
 
-        if self.player.direction == UP:
+        if self.player.direction == D_UP:
             y -= self.dash_distance
-        elif self.player.direction == RIGHT:
+        elif self.player.direction == D_RIGHT:
             x += self.dash_distance
-        elif self.player.direction == DOWN:
+        elif self.player.direction == D_DOWN:
             y += self.dash_distance
-        elif self.player.direction == LEFT:
+        elif self.player.direction == D_LEFT:
             x -= self.dash_distance
 
         self.is_dash_recharging = True
+        self.enemies_damaged = []
         self.canvas.itemconfig(self.dash_recharge_label, text="Dash: Not Ready")
         Thread(target=self.__recharge_dash).start()
         self.player.dont_take_damage_protocol = True
@@ -62,11 +63,10 @@ class Dash:
         self.player.x = x
         self.player.y = y
 
-        enemies_damaged = []
         for enemy in self.player.enemies:
-            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50 and enemy not in enemies_damaged:
+            if enemy.x - 50 < x < enemy.x + 50 and enemy.y - 50 < y < enemy.y + 50 and enemy not in self.enemies_damaged:
                 enemy.take_damage(self.dash_damage)
-                enemies_damaged.append(enemy)
+                self.enemies_damaged.append(enemy)
 
                 if enemy.health <= 0:
                     self.player.operator.on_enemy_killed()
